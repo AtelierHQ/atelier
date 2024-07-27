@@ -1,62 +1,12 @@
 using Atelier.Core.Entities;
 using Atelier.Core.Interfaces;
+using Atelier.Server.RequestModels;
+using Atelier.Server.ResponseModels;
 using FastEndpoints;
-using FluentValidation;
 
 namespace Atelier.Server.Endpoints;
 
-public record CreateIdeaRequest(
-    string Title,
-    string Description,
-    string Author,
-    List<string> Tags,
-    List<string> Attachments
-);
-
-public record UpdateIdeaRequest(
-    string Title,
-    string Description,
-    List<string> Tags,
-    List<string> Attachments
-);
-
-public record IdeaResponse(
-    string Id,
-    string Title,
-    string Description,
-    string Author,
-    List<string> Tags,
-    List<string> Attachments,
-    DateTime CreatedAt,
-    DateTime UpdatedAt
-);
-
-// Validators
-public class CreateIdeaValidator : Validator<CreateIdeaRequest>
-{
-    public CreateIdeaValidator()
-    {
-        RuleFor(x => x.Title).NotEmpty().MaximumLength(100);
-        RuleFor(x => x.Description).NotEmpty().MaximumLength(1000);
-        RuleFor(x => x.Author).NotEmpty().MaximumLength(50);
-        RuleFor(x => x.Tags).NotNull();
-        RuleFor(x => x.Attachments).NotNull();
-    }
-}
-
-public class UpdateIdeaValidator : Validator<UpdateIdeaRequest>
-{
-    public UpdateIdeaValidator()
-    {
-        RuleFor(x => x.Title).NotEmpty().MaximumLength(100);
-        RuleFor(x => x.Description).NotEmpty().MaximumLength(1000);
-        RuleFor(x => x.Tags).NotNull();
-        RuleFor(x => x.Attachments).NotNull();
-    }
-}
-
-// Create Endpoint
-public class CreateIdeaEndpoint : Endpoint<CreateIdeaRequest, IdeaResponse>
+public class CreateIdeaEndpoint : Endpoint<CreateIdeaRequestModel, IdeaResponseModel>
 {
     private readonly IEntityRepository<Idea, string> _ideasRepository;
 
@@ -72,25 +22,18 @@ public class CreateIdeaEndpoint : Endpoint<CreateIdeaRequest, IdeaResponse>
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(CreateIdeaRequest req, CancellationToken ct)
+    public override async Task HandleAsync(CreateIdeaRequestModel request, CancellationToken ct)
     {
-        var idea = new Idea(
-            req.Title,
-            req.Description,
-            req.Author,
-            req.Tags,
-            req.Attachments
-        );
+        var newIdea = new Idea(request.Title, request.Description, request.Author, request.Tags, request.Attachments);
 
-        await _ideasRepository.CreateAsync(idea, ct);
-
+        var idea = await _ideasRepository.CreateAsync(newIdea, ct);
         var response = IdeaEndpointsHelper.MapToResponse(idea);
+
         await SendAsync(response, 201, ct);
     }
 }
 
-// Read (Get All) Endpoint
-public class GetAllIdeasEndpoint : EndpointWithoutRequest<List<IdeaResponse>>
+public class GetAllIdeasEndpoint : EndpointWithoutRequest<List<IdeaResponseModel>>
 {
     private readonly IEntityRepository<Idea, string> _ideasRepository;
 
@@ -110,12 +53,12 @@ public class GetAllIdeasEndpoint : EndpointWithoutRequest<List<IdeaResponse>>
     {
         var ideas = await _ideasRepository.GetAllAsync(0, 0, ct);
         var response = ideas.ConvertAll(IdeaEndpointsHelper.MapToResponse);
+
         await SendAsync(response, cancellation: ct);
     }
 }
 
-// Read (Get One) Endpoint
-public class GetIdeaEndpoint : Endpoint<string, IdeaResponse>
+public class GetIdeaEndpoint : Endpoint<string, IdeaResponseModel>
 {
     private readonly IEntityRepository<Idea, string> _ideasRepository;
 
@@ -139,19 +82,76 @@ public class GetIdeaEndpoint : Endpoint<string, IdeaResponse>
     }
 }
 
+public class UpdateIdeaEndpoint : Endpoint<(string, UpdateIdeaRequestModel), IdeaResponseModel>
+{
+    private readonly IEntityRepository<Idea, string> _ideasRepository;
+
+    public UpdateIdeaEndpoint(IEntityRepository<Idea, string> ideasRepository)
+    {
+        ArgumentNullException.ThrowIfNull(ideasRepository);
+        _ideasRepository = ideasRepository;
+    }
+
+    public override void Configure()
+    {
+        Put("/ideas/{id}");
+        AllowAnonymous();
+    }
+
+    public override async Task HandleAsync((string, UpdateIdeaRequestModel) request, CancellationToken ct)
+    {
+        var (id, updateRequest) = request;
+        var idea = await _ideasRepository.GetByIdAsync(id, ct);
+
+        idea.Update(updateRequest.Title, updateRequest.Description, updateRequest.Tags, updateRequest.Attachments);
+
+        var updatedIdea = await _ideasRepository.UpdateAsync(id, idea, ct);
+        var response = IdeaEndpointsHelper.MapToResponse(updatedIdea);
+
+        await SendAsync(response, cancellation: ct);
+    }
+}
+
+public class DeleteIdeaEndpoint : Endpoint<string, bool>
+{
+    private readonly IEntityRepository<Idea, string> _ideasRepository;
+
+    public DeleteIdeaEndpoint(IEntityRepository<Idea, string> ideasRepository)
+    {
+        ArgumentNullException.ThrowIfNull(ideasRepository);
+        _ideasRepository = ideasRepository;
+    }
+
+    public override void Configure()
+    {
+        Delete("/ideas/{id}");
+        AllowAnonymous();
+    }
+
+    public override async Task HandleAsync(string id, CancellationToken ct)
+    {
+        var idea = await _ideasRepository.GetByIdAsync(id, ct);
+
+        idea.MarkAsDeleted();
+        await SendAsync(true, 204, cancellation: ct);
+    }
+}
+
 public static class IdeaEndpointsHelper
 {
-    public static IdeaResponse MapToResponse(Idea idea)
+    public static IdeaResponseModel MapToResponse(Idea idea)
     {
-        return new IdeaResponse(
-            idea.Id,
-            idea.Title,
-            idea.Description,
-            idea.Author,
-            idea.Tags,
-            idea.Attachments,
-            idea.CreatedAt,
-            idea.UpdatedAt
-        );
+        return new IdeaResponseModel
+        {
+            Id = idea.Id,
+            Title = idea.Title,
+            Description = idea.Description,
+            Author = idea.Author,
+            Tags = idea.Tags,
+            Attachments = idea.Attachments,
+            CreatedAt = idea.CreatedAt,
+            UpdatedAt = idea.UpdatedAt,
+            IsDeleted = idea.IsDeleted
+        };
     }
 }

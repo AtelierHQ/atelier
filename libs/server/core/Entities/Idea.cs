@@ -50,4 +50,23 @@ public class Idea : IEntity<string>
             Id = id;
         }
     }
+
+    public void Update(string title, string description, List<string> tags, List<string> attachments)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
+        ArgumentException.ThrowIfNullOrWhiteSpace(description);
+        ArgumentNullException.ThrowIfNull(tags);
+        ArgumentNullException.ThrowIfNull(attachments);
+
+        Title = title;
+        Description = description;
+        Tags = tags;
+        Attachments = attachments;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void MarkAsDeleted()
+    {
+        IsDeleted = true;
+    }
 }
