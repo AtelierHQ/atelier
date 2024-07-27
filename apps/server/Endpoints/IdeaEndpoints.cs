@@ -18,7 +18,7 @@ public class CreateIdeaEndpoint : Endpoint<CreateIdeaRequestModel, IdeaResponseM
 
     public override void Configure()
     {
-        Post("/ideas");
+        Post("/api/ideas");
         AllowAnonymous();
     }
 
@@ -45,7 +45,7 @@ public class GetAllIdeasEndpoint : EndpointWithoutRequest<List<IdeaResponseModel
 
     public override void Configure()
     {
-        Get("/ideas");
+        Get("/api/ideas");
         AllowAnonymous();
     }
 
@@ -70,7 +70,7 @@ public class GetIdeaEndpoint : Endpoint<string, IdeaResponseModel>
 
     public override void Configure()
     {
-        Get("/ideas/{id}");
+        Get("/api/ideas/{id}");
         AllowAnonymous();
     }
 
@@ -82,7 +82,7 @@ public class GetIdeaEndpoint : Endpoint<string, IdeaResponseModel>
     }
 }
 
-public class UpdateIdeaEndpoint : Endpoint<(string, UpdateIdeaRequestModel), IdeaResponseModel>
+public class UpdateIdeaEndpoint : Endpoint<UpdateIdeaRequestModel, IdeaResponseModel>
 {
     private readonly IEntityRepository<Idea, string> _ideasRepository;
 
@@ -94,16 +94,22 @@ public class UpdateIdeaEndpoint : Endpoint<(string, UpdateIdeaRequestModel), Ide
 
     public override void Configure()
     {
-        Put("/ideas/{id}");
+        Put("/api/ideas/{id}");
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync((string, UpdateIdeaRequestModel) request, CancellationToken ct)
+    public override async Task HandleAsync(UpdateIdeaRequestModel request, CancellationToken ct)
     {
-        var (id, updateRequest) = request;
+        var id = Route<string>("id");
+        if (string.IsNullOrEmpty(id))
+        {
+            await SendErrorsAsync(400, ct);
+            return;
+        }
+
         var idea = await _ideasRepository.GetByIdAsync(id, ct);
 
-        idea.Update(updateRequest.Title, updateRequest.Description, updateRequest.Tags, updateRequest.Attachments);
+        idea.Update(request.Title, request.Description, request.Tags, request.Attachments);
 
         var updatedIdea = await _ideasRepository.UpdateAsync(id, idea, ct);
         var response = IdeaEndpointsHelper.MapToResponse(updatedIdea);
@@ -124,7 +130,7 @@ public class DeleteIdeaEndpoint : Endpoint<string, bool>
 
     public override void Configure()
     {
-        Delete("/ideas/{id}");
+        Delete("api/ideas/{id}");
         AllowAnonymous();
     }
 

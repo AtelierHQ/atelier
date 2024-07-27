@@ -24,7 +24,7 @@ public class UserSignupEndpoint : Endpoint<UserSignUpRequestModel>
 
     public override void Configure()
     {
-        Post("/signup");
+        Post("/api/d/signup");
         AllowAnonymous();
     }
 
@@ -64,7 +64,7 @@ public class UserLoginEndpoint : Endpoint<UserLoginRequestModel>
 
     public override void Configure()
     {
-        Post("/login");
+        Post("/api/d/login");
         AllowAnonymous();
     }
 

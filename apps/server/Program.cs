@@ -5,6 +5,7 @@ using Atelier.Infrastructure.Repositories;
 using Atelier.Server;
 using FastEndpoints;
 using FastEndpoints.Security;
+using FastEndpoints.Swagger;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +25,15 @@ builder.Services
     .AddFastEndpoints();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.SwaggerDocument(o =>
+{
+    o.AutoTagPathSegmentIndex = 2;
+    o.DocumentSettings = s =>
+    {
+        s.Title = "Atelier API";
+        s.Version = "V1";
+    };
+});
 
 builder.Services.AddCors(options =>
 {
@@ -40,7 +49,7 @@ app.UseAuthentication()
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
+    app.UseSwaggerGen();
     app.MapScalarUi();
 }
 
