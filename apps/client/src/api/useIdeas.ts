@@ -3,6 +3,11 @@ import { BASE_URL } from '../config';
 
 type Idea = {
   id: string;
+  author: string;
+  title: string;
+  description: string;
+  tags: any[];
+  attachments: any[];
 };
 
 async function fetchIdeas() {
@@ -22,4 +27,3 @@ function useIdeas() {
 }
 
 export { Idea, useIdeas };
-
