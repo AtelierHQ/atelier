@@ -1,4 +1,4 @@
-namespace Atelier.Server.Domain;
+namespace Atelier.Core.Domain;
 
 public class Document(Guid id, string name, string description, string content, Guid ownerId)
 {

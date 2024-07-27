@@ -1,4 +1,4 @@
-namespace Atelier.Server.Domain;
+namespace Atelier.Core.Domain;
 
 public class Product(Guid id, string name, string description, Guid ownerId, Guid teamId)
 {

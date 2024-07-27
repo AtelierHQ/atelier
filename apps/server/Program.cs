@@ -1,3 +1,4 @@
+using Atelier.Server;
 using FastEndpoints;
 using MongoDB.Driver;
 
@@ -19,7 +20,7 @@ app.UseFastEndpoints();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapScalarUi();
 }
 
 app.UseHttpsRedirection();

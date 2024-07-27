@@ -1,4 +1,4 @@
-namespace Atelier.Server.Domain;
+namespace Atelier.Core.Domain;
 
 public class User(Guid id, string name, string email, string password, string role)
 {

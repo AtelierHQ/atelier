@@ -1,4 +1,4 @@
-using Atelier.Server.Domain;
+using Atelier.Core.Domain;
 using FastEndpoints;
 using FluentValidation;
 using MongoDB.Driver;

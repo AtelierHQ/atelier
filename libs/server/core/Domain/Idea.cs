@@ -1,4 +1,4 @@
-namespace Atelier.Server.Domain;
+namespace Atelier.Core.Domain;
 
 public class Idea(Guid id, string title, string description, string author, List<string> tags, List<string> attachments)
 {
