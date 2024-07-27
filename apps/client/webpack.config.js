@@ -6,11 +6,6 @@ module.exports = {
   output: {
     path: path.join(__dirname, '../../dist/apps/client'),
   },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'apps/client/src/*'),
-    },
-  },
   devServer: {
     port: 4200,
   },

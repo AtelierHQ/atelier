@@ -1,42 +1,21 @@
-import { IdeasTable } from '../components/ideas-table/index';
-import { Route, Routes, Link } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import { Layout } from '../components/layout';
+import { AllIdeas } from '../modules';
+import { routes } from '../utils';
 
 export function App() {
   return (
-    <div>
-      <br />
-      <hr />
-      <br />
-      <div role="navigation">
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/page-2">Page 2</Link>
-          </li>
-        </ul>
-      </div>
+    <main>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <div className="bg-indigo-500 p-2 font-mono">
-              <IdeasTable />
-            </div>
-          }
-        />
-        <Route
-          path="/page-2"
-          element={
-            <div>
-              <Link to="/">Click here to go back to root page.</Link>
-            </div>
-          }
-        />
+        <Route path="/" element={<Layout />}>
+          <Route index element={<AllIdeas />} />
+          {routes.map((route) => {
+            const { path, routeComponent: Element } = route;
+            return <Route key={path} path={path} element={<Element />} />;
+          })}
+        </Route>
       </Routes>
-      {/* END: routes */}
-    </div>
+    </main>
   );
 }
 
