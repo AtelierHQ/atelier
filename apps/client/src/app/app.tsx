@@ -21,7 +21,7 @@ export function App() {
         <Route
           path="/"
           element={
-            <div className="bg-indigo-500 p-2 font-mono">
+            <div className="container mx-auto py-10">
               <IdeasTable />
             </div>
           }
