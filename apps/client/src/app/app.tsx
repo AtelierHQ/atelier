@@ -11,7 +11,7 @@ export function App() {
           <Route index element={<AllIdeas />} />
           {routes.map((route) => {
             const { path, routeComponent: Element } = route;
-            return <Route path={path} element={<Element />} />;
+            return <Route key={path} path={path} element={<Element />} />;
           })}
         </Route>
       </Routes>
