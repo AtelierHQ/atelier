@@ -1,4 +1,4 @@
-namespace Atelier.Core.Domain;
+namespace Atelier.Core.Entities;
 
 public class Team(Guid id, string name, string description, List<Guid> members)
 {

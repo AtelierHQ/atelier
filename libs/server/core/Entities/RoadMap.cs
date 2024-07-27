@@ -1,4 +1,4 @@
-namespace Atelier.Core.Domain;
+namespace Atelier.Core.Entities;
 
 public class RoadMap(Guid id, Guid productId, string name, List<Guid> ideas, DateTime startDate, DateTime endDate)
 {
