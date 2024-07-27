@@ -1,5 +1,5 @@
-import { BASE_URL } from '../config';
 import { useQuery } from '@tanstack/react-query';
+import { BASE_URL } from '../config';
 
 type Idea = {
   id: string;
@@ -21,4 +21,5 @@ function useIdeas() {
   });
 }
 
-export { useIdeas, Idea };
+export { Idea, useIdeas };
+
