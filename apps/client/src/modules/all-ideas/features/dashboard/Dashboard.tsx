@@ -1,4 +1,4 @@
-import { IdeasTable } from 'apps/client/src/components/ideas-table';
+import { IdeasTable } from '../ideas-table';
 
 type Props = {};
 

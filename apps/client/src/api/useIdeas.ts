@@ -1,14 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { BASE_URL } from '../config';
-
-type Idea = {
-  id: string;
-  author: string;
-  title: string;
-  description: string;
-  tags: any[];
-  attachments: any[];
-};
+import { Idea } from '../modules/all-ideas/features/ideas-table/types';
 
 async function fetchIdeas() {
   const res = await fetch(`${BASE_URL}/ideas`);
@@ -26,4 +18,4 @@ function useIdeas() {
   });
 }
 
-export { Idea, useIdeas };
+export { useIdeas };

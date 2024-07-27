@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 
-import { Idea } from '../../api/useIdeas';
-import { Checkbox } from '../ui/checkbox';
+import { Checkbox } from '../../../../../components/ui/checkbox';
+import { Idea } from '../types';
 
 export const columns: ColumnDef<Idea>[] = [
   {

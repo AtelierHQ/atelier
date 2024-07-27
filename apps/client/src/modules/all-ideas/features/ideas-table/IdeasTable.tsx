@@ -1,6 +1,6 @@
-import { useIdeas } from '../../api/useIdeas';
-import { DataTable } from '../ui/data-table';
-import { columns } from './columns';
+import { useIdeas } from '../../../../api/useIdeas';
+import { DataTable } from '../../../../components/ui/data-table';
+import { columns } from './components/columns';
 
 function IdeasTable() {
   const ideas = useIdeas();
