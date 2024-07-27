@@ -3,13 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 
 type Idea = {
   id: string;
-  title: string;
-  description: string;
-  author: string;
-  tags: any;
-  attachments: any;
-  createdAt: string;
-  updatedAt: string;
 };
 
 async function fetchIdeas() {
