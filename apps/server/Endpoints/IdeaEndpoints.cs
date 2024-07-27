@@ -134,13 +134,6 @@ public class GetIdeaEndpoint : Endpoint<string, IdeaResponse>
     public override async Task HandleAsync(string id, CancellationToken ct)
     {
         var idea = await _ideasRepository.GetByIdAsync(id, ct);
-
-        if (idea == null)
-        {
-            await SendNotFoundAsync(ct);
-            return;
-        }
-
         var response = IdeaEndpointsHelper.MapToResponse(idea);
         await SendAsync(response, cancellation: ct);
     }
@@ -148,7 +141,6 @@ public class GetIdeaEndpoint : Endpoint<string, IdeaResponse>
 
 public static class IdeaEndpointsHelper
 {
-    // Helper method to map Idea to IdeaResponse
     public static IdeaResponse MapToResponse(Idea idea)
     {
         return new IdeaResponse(

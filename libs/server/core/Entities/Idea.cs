@@ -43,6 +43,8 @@ public class Idea : IEntity<string>
 
     public void SetId(string id)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
         if (string.IsNullOrEmpty(Id))
         {
             Id = id;

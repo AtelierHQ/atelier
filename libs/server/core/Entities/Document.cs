@@ -6,36 +6,40 @@ public class Document : IEntity<string>
 {
     public string Id { get; private set; }
 
-    public string Name { get; set; }
+    public string Title { get; private set; }
 
-    public string Description { get; set; }
+    public string Content { get; private set; }
 
-    public string Content { get; set; }
+    public string OwnerId { get; private set; }
 
-    public Guid OwnerId { get; set; }
+    public DateTime CreatedAt { get; private set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; private set; }
 
-    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    public bool IsDeleted { get; private set; }
 
-    public bool IsDeleted { get; set; } = false;
-
-    public Document(string name, string description, string content, Guid ownerId)
+    public Document(string title, string content, string ownerId, DateTime createdAt, DateTime updatedAt)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(name);
-        ArgumentException.ThrowIfNullOrWhiteSpace(description);
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
         ArgumentException.ThrowIfNullOrWhiteSpace(content);
         ArgumentNullException.ThrowIfNull(ownerId);
 
         Id = string.Empty;
-        Name = name;
-        Description = description;
+        Title = title;
         Content = content;
         OwnerId = ownerId;
+        CreatedAt = createdAt;
+        UpdatedAt = updatedAt;
+        IsDeleted = false;
     }
 
     public void SetId(string id)
     {
-        throw new NotImplementedException();
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
+        if (string.IsNullOrEmpty(Id))
+        {
+            Id = id;
+        }
     }
 }

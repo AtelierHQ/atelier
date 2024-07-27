@@ -37,7 +37,13 @@ public class EntityRepository<TEntity, TId> : IEntityRepository<TEntity, TId>
 
     public async Task<TEntity> GetByIdAsync(TId id, CancellationToken ct)
     {
-        return await _collection.Find(e => e.Id != null && e.Id.Equals(id)).FirstOrDefaultAsync(ct);
+        var entity = await _collection.Find(e => e.Id != null && e.Id.Equals(id)).FirstOrDefaultAsync(ct);
+        if (entity is null)
+        {
+            throw new Exception("Entity not found");
+        }
+
+        return entity;
     }
 
     public async Task<TEntity> UpdateAsync(TId id, TEntity entity, CancellationToken ct)
