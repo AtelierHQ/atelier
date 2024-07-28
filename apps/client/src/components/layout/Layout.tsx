@@ -8,11 +8,11 @@ type Props = {
 
 const Layout = (props: Props) => {
   return (
-    <div className="grid min-h-screen md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+    <div className="min-h-screen max-w-full flex ">
       <Sidebar />
-      <div>
+      <div className="flex-1 overflow-auto">
         <Header />
-        <main className="flex-1 p-4 overflow-auto">
+        <main className="flex-1 p-4">
           <Outlet />
         </main>
       </div>

@@ -1,4 +1,4 @@
-import { Home, LogIn, Package, ShoppingCart } from 'lucide-react';
+import { Home, Package, ShoppingCart } from 'lucide-react';
 import { AllIdeas } from '../modules';
 import ImpactAssessment from '../modules/impact-assessment';
 import { ProductRoadmap } from '../modules/product-roadmap';
@@ -18,11 +18,6 @@ const navigationItems = [
     icon: Package,
     link: 'product-roadmap',
     title: 'Product Roadmap',
-  },
-  {
-    icon: LogIn,
-    link: 'signup',
-    title: 'Signup',
   },
 ];
 
