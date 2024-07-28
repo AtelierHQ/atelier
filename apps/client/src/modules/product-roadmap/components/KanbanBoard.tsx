@@ -6,6 +6,7 @@ import { Input } from '../../../components//ui/input';
 import { Button } from '../../../components/ui/button';
 
 // Assuming Idea type is defined in your types file
+import { format } from 'date-fns';
 import { useFields, useIdea, useIdeas } from '../../../api';
 import type { ColumnsType, Idea, NewIdea } from '../../all-ideas/features/ideas-table/types';
 
@@ -161,8 +162,8 @@ const KanbanBoard = () => {
                                     </Button>
                                   </CardHeader>
                                   <CardContent>
-                                    <p className="text-xs text-muted-foreground">
-                                      {idea.description}
+                                    <p className="text-xs text-muted-foreground ">
+                                      Created At: <b>{format(idea.createdAt ?? '', 'PPpp')}</b>
                                     </p>
                                   </CardContent>
                                 </Card>

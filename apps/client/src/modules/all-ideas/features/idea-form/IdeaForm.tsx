@@ -1,5 +1,5 @@
 import { type YooptaContentValue, createYooptaEditor } from '@yoopta/editor';
-import { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useIdea } from '../../../../api/useIdea';
 import Editor from '../../../../components/editor';
@@ -10,32 +10,27 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '../../../../components/ui/dialog';
 import { Input } from '../../../../components/ui/input';
 import { useAuthStore } from '../../../../store';
 import { WITH_BASIC_INIT_VALUE } from '../../../../utils/initValue';
 
-type FieldType = {
-  id: string;
-  value: string | number;
-  description: string;
-  name: string;
-  custom: boolean;
-  type: string;
-  configurations: any;
-};
-
 type IdeaCreationFormProps = {
   initialValues?: any;
+  open: boolean;
+  onClose: () => void;
 };
 
-function IdeaCreationForm({ initialValues }: IdeaCreationFormProps) {
-  const { register, handleSubmit, control, getValues } = useForm();
+function IdeaCreationForm({ initialValues, open, onClose }: IdeaCreationFormProps) {
+  const { register, handleSubmit, control, getValues, reset } = useForm({
+    defaultValues: initialValues,
+  });
   const editor = useMemo(() => createYooptaEditor(), []);
   const [description, setDescription] = useState<YooptaContentValue>(
     initialValues?.description || WITH_BASIC_INIT_VALUE,
   );
+  console.log({ initialValues });
+
   const {
     createIdeaMutation: { mutate: postIdea },
   } = useIdea();
@@ -49,7 +44,11 @@ function IdeaCreationForm({ initialValues }: IdeaCreationFormProps) {
       description: JSON.stringify(editor.children),
       author: userId,
     };
-    postIdea(valuesWithDescription);
+    postIdea(valuesWithDescription, {
+      onSuccess: () => {
+        onClose();
+      },
+    });
   };
   // const fields: FieldType[] = [
   //   {
@@ -138,11 +137,12 @@ function IdeaCreationForm({ initialValues }: IdeaCreationFormProps) {
   //   return fields.find((field) => field.id === id)?.value;
   // }
 
+  React.useEffect(() => {
+    reset(initialValues);
+  }, [initialValues]);
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">{initialValues ? 'Update Idea' : 'Create Idea'}</Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[1080px] min-w-960">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
@@ -187,11 +187,12 @@ function IdeaCreationForm({ initialValues }: IdeaCreationFormProps) {
             <Button
               variant="outline"
               className="bg-red-400 text-white hover:bg-red-500 hover:text-white mr-2"
+              onClick={onClose}
             >
               Discard Idea
             </Button>
             <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700" onClick={onSubmit}>
-              Create Idea
+              {initialValues ? 'Update Idea' : 'Create Idea'}
             </Button>
           </div>
         </DialogFooter>
