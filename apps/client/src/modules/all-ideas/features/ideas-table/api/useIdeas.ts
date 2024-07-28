@@ -12,7 +12,7 @@ async function fetchIdeas() {
 
 function useIdeas() {
   return useQuery({
-    queryKey: ['ideas',],
+    queryKey: ['ideas'],
     queryFn: fetchIdeas,
   });
 }

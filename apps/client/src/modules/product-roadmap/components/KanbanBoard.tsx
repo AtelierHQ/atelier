@@ -7,12 +7,12 @@ import { Button } from '../../../components/ui/button';
 
 // Assuming Idea type is defined in your types file
 import { useFields, useIdea, useIdeas } from '../../all-ideas/features/ideas-table/api';
-import { Idea, NewIdea } from '../../all-ideas/features/ideas-table/types';
+import { ColumnsType, Idea, NewIdea } from '../../all-ideas/features/ideas-table/types';
 
 const KanbanBoard = () => {
   const { createIdeaMutation, updateIdeaMutation, deleteIdeaMutation } = useIdea();
   const { data: ideas, isLoading, error } = useIdeas();
-  const { data: allFields } = useFields();
+  const { data: allFields, isLoading: isFieldsLoading } = useFields();
   const [newIdeaTitle, setNewIdeaTitle] = useState<NewIdea>();
   const loggedUser = 'John Doe';
 
@@ -23,29 +23,33 @@ const KanbanBoard = () => {
     never: { bg: 'bg-red', text: 'text-red-500' },
   };
 
-  const columns: Record<string, { id: string; title: string; ideas: Idea[] }> = {
+  const initialColumns: ColumnsType = {
     now: { id: 'now', title: 'Now', ideas: [] },
     next: { id: 'next', title: 'Next', ideas: [] },
     later: { id: 'later', title: 'Later', ideas: [] },
     never: { id: 'never', title: 'Never', ideas: [] },
   };
 
+  const [columns, setColumns] = useState<ColumnsType>(initialColumns);
+
   useEffect(() => {
     if (!allFields) return;
     const statusField = allFields?.find((field) => field.label === 'Status');
     // Organize ideas into columns
+    const newColumns = initialColumns;
     ideas?.forEach((idea) => {
       const status = idea?.fieldsValues?.find(
         (field: any) => field?.fieldId === statusField?.id,
       )?.value;
-      if (columns[status]) {
-        columns[status].ideas.push(idea);
+      if (newColumns[status]) {
+        newColumns[status].ideas.push(idea);
       } else {
         // If the status is not one of the columns, add it to the 'never' column
-        columns.never.ideas.push(idea);
+        newColumns.never.ideas.push(idea);
       }
     });
-  }, [allFields]);
+    setColumns(newColumns);
+  }, [allFields?.length, ideas?.length]);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -89,14 +93,20 @@ const KanbanBoard = () => {
   };
 
   const deleteIdea = (ideaId: string) => {
-    deleteIdeaMutation.mutate(ideaId);
+    deleteIdeaMutation.mutate(ideaId, {
+      onSuccess: () => {},
+    });
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || isFieldsLoading) return <div>Loading...</div>;
   if (error) return <div>An error occurred: {error.message}</div>;
 
   return (
     <div className="p-4">
+      <div
+        className="bg-green-100 bg-red-50 bg-red-100 bg-yellow-100 bg-blue-50 bg-blue-100"
+        style={{ display: 'none' }}
+      />
       <h1 className="text-2xl font-bold mb-4">Product Roadmap</h1>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex gap-4 overflow-x-auto">
@@ -105,7 +115,7 @@ const KanbanBoard = () => {
               <Card className={`${colors[column.id]?.bg}-50`}>
                 <CardHeader>
                   <CardTitle
-                    className={`${colors[column.id]?.bg}-100 w-fit p-[5px] rounded text-xs ${colors[column.id]?.text} `}
+                    className={`${colors[column.id]?.bg}-100 w-fit p-[5px] rounded text-xs ${colors[column.id]?.text}`}
                   >
                     {column.title}
                   </CardTitle>

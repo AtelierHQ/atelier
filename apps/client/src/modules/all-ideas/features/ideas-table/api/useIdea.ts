@@ -45,9 +45,19 @@ async function updateIdea(payload: Partial<Idea>) {
 function useIdea() {
   const queryClient = useQueryClient();
 
-  const createIdeaMutation = useMutation({ mutationFn: createIdea });
+  const createIdeaMutation = useMutation({
+    mutationFn: createIdea,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['ideas'] });
+    },
+  });
 
-  const deleteIdeaMutation = useMutation({ mutationFn: deleteIdea });
+  const deleteIdeaMutation = useMutation({
+    mutationFn: deleteIdea,
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['ideas'] });
+    },
+  });
 
   const updateIdeaMutation = useMutation({
     mutationFn: updateIdea,
