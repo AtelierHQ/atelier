@@ -41,7 +41,7 @@ public class User : IEntity<string>
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        if (string.IsNullOrWhiteSpace(id))
+        if (string.IsNullOrWhiteSpace(Id))
         {
             Id = id;
         }

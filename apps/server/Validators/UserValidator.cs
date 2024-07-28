@@ -14,3 +14,12 @@ public class SignUpValidator : Validator<UserSignUpRequestModel>
         RuleFor(x => x.Role).NotEmpty();
     }
 }
+
+public class LoginValidator : Validator<UserLoginRequestModel>
+{
+    public LoginValidator()
+    {
+        RuleFor(x => x.Email).NotEmpty().EmailAddress();
+        RuleFor(x => x.Password).NotEmpty().MinimumLength(6);
+    }
+}

@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import { Layout } from '../components/layout';
 import { AllIdeas } from '../modules';
+import { SignupPage } from '../modules/authentication';
 import { ProductRoadmap } from '../modules/product-roadmap';
 
 export function App() {
@@ -16,6 +17,7 @@ export function App() {
         <Route path="product-roadmap" element={<ProductRoadmap />} />
         <Route path="*" element={<div>404</div>} />
       </Route>
+      <Route path="/signup" element={<SignupPage />} />
     </Routes>
   );
 }

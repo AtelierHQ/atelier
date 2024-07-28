@@ -12,6 +12,7 @@ public class CollectionNameProvider : ICollectionNameProvider
 {
     private readonly Dictionary<Type, string> _collectionNames = new()
     {
+        { typeof(User), "users" },
         { typeof(Idea), "ideas" },
         { typeof(Document), "documents" },
         { typeof(FieldBase), "fields" }

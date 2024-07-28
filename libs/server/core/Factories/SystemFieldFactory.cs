@@ -5,7 +5,7 @@ namespace Atelier.Core.Factories;
 
 public static class SystemFieldFactory
 {
-    public static FieldBase CreateSystemField(FieldType fieldType)
+    public static FieldBase CreateSystemField(FieldType fieldType, string label, string description)
     {
         return fieldType switch
         {

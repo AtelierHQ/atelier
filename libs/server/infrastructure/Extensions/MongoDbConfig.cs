@@ -32,13 +32,7 @@ public static class MongoDbConfig
     {
         if (!BsonClassMap.IsClassMapRegistered(typeof(TEntity)))
         {
-            BsonClassMap.RegisterClassMap<TEntity>(cm =>
-            {
-                cm.AutoMap();
-                cm.MapIdMember(c => c.Id)
-                    .SetIdGenerator(StringObjectIdGenerator.Instance)
-                    .SetSerializer(new StringSerializer(BsonType.ObjectId));
-            });
+            BsonClassMap.RegisterClassMap<TEntity>(cm => { cm.AutoMap(); });
         }
     }
 }
