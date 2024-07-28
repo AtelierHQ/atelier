@@ -6,11 +6,11 @@ using FastEndpoints;
 
 namespace Atelier.Server.Endpoints;
 
-public class OnboardingEndpoint : EndpointWithoutRequest
+public class InitializeSystemFieldsEndpoints : EndpointWithoutRequest
 {
     private readonly IEntityRepository<FieldBase, string> _fieldsRepository;
 
-    public OnboardingEndpoint(IEntityRepository<FieldBase, string> fieldsRepository)
+    public InitializeSystemFieldsEndpoints(IEntityRepository<FieldBase, string> fieldsRepository)
     {
         ArgumentNullException.ThrowIfNull(fieldsRepository);
 
@@ -34,5 +34,30 @@ public class OnboardingEndpoint : EndpointWithoutRequest
         }
 
         await SendAsync("System fields created successfully.", 201, ct);
+    }
+}
+
+public class GetAllFieldsEndpoints : EndpointWithoutRequest
+{
+    private readonly IEntityRepository<FieldBase, string> _fieldsRepository;
+
+    public GetAllFieldsEndpoints(IEntityRepository<FieldBase, string> fieldsRepository)
+    {
+        ArgumentNullException.ThrowIfNull(fieldsRepository);
+
+        _fieldsRepository = fieldsRepository;
+    }
+
+    public override void Configure()
+    {
+        Get("/api/fields");
+        AllowAnonymous();
+    }
+
+    public override async Task HandleAsync(CancellationToken ct)
+    {
+        var fields = await _fieldsRepository.GetAllAsync(0, 0, ct);
+
+        await SendAsync(fields, 200, ct);
     }
 }
