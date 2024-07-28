@@ -1,6 +1,6 @@
 import { PlusCircle, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, type DropResult, Droppable } from 'react-beautiful-dnd';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components//ui/card';
 import { Input } from '../../../components//ui/input';
 import { Button } from '../../../components/ui/button';
@@ -175,7 +175,10 @@ const KanbanBoard = () => {
                     <Input
                       value={newIdeaTitle?.[column.id]}
                       onChange={(e) => {
-                        setNewIdeaTitle({ ...newIdeaTitle, [column.id]: e.target.value });
+                        setNewIdeaTitle({
+                          ...newIdeaTitle,
+                          [column.id]: e.target.value,
+                        });
                       }}
                       placeholder="New idea title"
                       className="flex-grow"
