@@ -1,6 +1,6 @@
 namespace Atelier.Server.ResponseModels;
 
-public class FieldsBaseResponseModel
+public abstract class FieldsBaseResponseModel
 {
     public string Id { get; init; } = string.Empty;
 

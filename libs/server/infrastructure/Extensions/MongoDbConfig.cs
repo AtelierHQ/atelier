@@ -1,4 +1,5 @@
 using Atelier.Core.Entities;
+using Atelier.Core.Entities.Fields;
 using Atelier.Core.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -12,7 +13,19 @@ public static class MongoDbConfig
     {
         // Register class maps for each of your entity types
         RegisterClassMap<Idea>();
-        // RegisterClassMap<OtherEntity>();
+        // Register class maps
+        BsonClassMap.RegisterClassMap<FieldBase>(cm =>
+        {
+            cm.AutoMap();
+            cm.SetIsRootClass(true);
+            cm.AddKnownType(typeof(SelectField));
+            cm.AddKnownType(typeof(RatingField));
+            cm.AddKnownType(typeof(CheckboxField));
+            cm.AddKnownType(typeof(DateField));
+            cm.AddKnownType(typeof(InputField));
+            cm.AddKnownType(typeof(SliderField));
+            cm.AddKnownType(typeof(NumberField));
+        });
     }
 
     private static void RegisterClassMap<TEntity>() where TEntity : IEntity<string>

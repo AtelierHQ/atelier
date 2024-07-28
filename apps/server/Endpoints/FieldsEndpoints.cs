@@ -4,6 +4,7 @@ using Atelier.Core.Factories;
 using Atelier.Core.Interfaces;
 using Atelier.Server.ResponseModels;
 using FastEndpoints;
+using Newtonsoft.Json;
 
 namespace Atelier.Server.Endpoints;
 
@@ -58,9 +59,8 @@ public class GetAllFieldsEndpoints : EndpointWithoutRequest
     public override async Task HandleAsync(CancellationToken ct)
     {
         var fields = await _fieldsRepository.GetAllAsync(0, 0, ct);
-
-        var fieldsResponse = fields.Select(FieldsHelper.MapToResponseModel).ToList();
-        await SendAsync(fieldsResponse, 200, ct);
+        var fieldsWithFieldTypeStrings = fields.Select(FieldsHelper.MapToResponseModel).ToList();
+        await SendAsync(JsonConvert.SerializeObject(fieldsWithFieldTypeStrings), 200, ct);
     }
 }
 
@@ -75,7 +75,7 @@ public static class FieldsHelper
                 Id = field.Id,
                 Label = field.Label,
                 Description = field.Description,
-                FieldType = field.FieldType.ToString(),
+                FieldType = EnumHelper.GetStringValue(field.FieldType),
                 Options = selectField.Options
             },
             RatingField ratingField => new RatingFieldResponseModel
@@ -83,7 +83,7 @@ public static class FieldsHelper
                 Id = field.Id,
                 Label = field.Label,
                 Description = field.Description,
-                FieldType = field.FieldType.ToString(),
+                FieldType = EnumHelper.GetStringValue(field.FieldType),
                 MaxRating = ratingField.MaxRating
             },
             CheckboxField checkboxField => new CheckboxFieldResponseModel
@@ -91,7 +91,7 @@ public static class FieldsHelper
                 Id = field.Id,
                 Label = field.Label,
                 Description = field.Description,
-                FieldType = field.FieldType.ToString(),
+                FieldType = EnumHelper.GetStringValue(field.FieldType),
                 IsChecked = checkboxField.IsChecked
             },
             DateField dateField => new DateFieldResponseModel
@@ -99,7 +99,7 @@ public static class FieldsHelper
                 Id = field.Id,
                 Label = field.Label,
                 Description = field.Description,
-                FieldType = field.FieldType.ToString(),
+                FieldType = EnumHelper.GetStringValue(field.FieldType),
                 MinDate = dateField.MinDate,
                 MaxDate = dateField.MaxDate
             },
@@ -108,7 +108,7 @@ public static class FieldsHelper
                 Id = field.Id,
                 Label = field.Label,
                 Description = field.Description,
-                FieldType = field.FieldType.ToString(),
+                FieldType = EnumHelper.GetStringValue(field.FieldType),
                 Placeholder = inputField.Placeholder
             },
             SliderField sliderField => new SliderFieldResponseModel
@@ -116,7 +116,7 @@ public static class FieldsHelper
                 Id = field.Id,
                 Label = field.Label,
                 Description = field.Description,
-                FieldType = field.FieldType.ToString(),
+                FieldType = EnumHelper.GetStringValue(field.FieldType),
                 MinValue = sliderField.MinValue,
                 MaxValue = sliderField.MaxValue,
                 Step = sliderField.Step
@@ -126,7 +126,7 @@ public static class FieldsHelper
                 Id = field.Id,
                 Label = field.Label,
                 Description = field.Description,
-                FieldType = field.FieldType.ToString(),
+                FieldType = EnumHelper.GetStringValue(field.FieldType),
                 IsDecimal = numberField.IsDecimal,
                 AllowNegative = numberField.AllowNegative
             },

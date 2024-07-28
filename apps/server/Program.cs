@@ -42,6 +42,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
+MongoDbConfig.Configure();
+
 var app = builder.Build();
 
 app.UseAuthentication()

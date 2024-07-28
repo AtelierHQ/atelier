@@ -1,4 +1,5 @@
 using Atelier.Core.Entities;
+using Atelier.Core.Entities.Fields;
 
 namespace Atelier.Infrastructure.Extensions;
 
@@ -12,7 +13,8 @@ public class CollectionNameProvider : ICollectionNameProvider
     private readonly Dictionary<Type, string> _collectionNames = new()
     {
         { typeof(Idea), "ideas" },
-        { typeof(Document), "documents" }
+        { typeof(Document), "documents" },
+        { typeof(FieldBase), "fields" }
     };
 
     public string GetCollectionName<TEntity>()
