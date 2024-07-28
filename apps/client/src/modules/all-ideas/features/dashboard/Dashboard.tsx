@@ -1,68 +1,37 @@
+import { Button } from 'apps/client/src/components/ui/button';
 import { IdeaCreationForm } from 'apps/client/src/modules/all-ideas/features/idea-form/IdeaForm';
 import { IdeasTable } from 'apps/client/src/modules/all-ideas/features/ideas-table';
+import { useState } from 'react';
 
 type Props = {};
 
 const AllIdeas = (props: Props) => {
-  const initialValues = {
-    title: 'This is a custom title for the idea',
-    description: {
-      '1c9df015-11b3-4cd1-831f-66f5b4111d57': {
-        id: '1c9df015-11b3-4cd1-831f-66f5b4111d57',
-        value: [
-          {
-            id: '7cc8b180-5920-4e57-9c46-cee26bef206a',
-            type: 'code',
-            children: [
-              {
-                text: "import Blockquote from '@yoopta/blockquote'\nimport { HeadingTwo } from '@yoopta/headings';\n\nconst plugins = [\n  //...otherplugins\n  Blockquote.extend({\n    options: {\n      HTMLAttributes: {\n        className: s.blockquote,\n      },\n    },\n  }),\n  HeadingTwo.extend({\n    options: {\n      HTMLAttributes: {\n        style: {\n          color: 'green',\n        },\n      },\n    },\n  })\n]",
-              },
-            ],
-            props: {
-              nodeType: 'void',
-              language: 'javascript',
-              theme: 'VSCode',
-            },
-          },
-        ],
-        type: 'Code',
-        meta: {
-          order: 9,
-          depth: 1,
-        },
-      },
-      '1a1ce913-6ab1-4487-bfc3-deec5651966a': {
-        id: '1a1ce913-6ab1-4487-bfc3-deec5651966a',
-        value: [
-          {
-            id: 'c9c52908-f9df-4018-b867-81b34e1e2998',
-            type: 'paragraph',
-            children: [
-              {
-                text: '',
-              },
-            ],
-            props: {
-              nodeType: 'block',
-            },
-          },
-        ],
-        type: 'Paragraph',
-        meta: {
-          order: 7,
-          depth: 0,
-        },
-      },
-    },
+  // const [open, setOpen] = useState(false);
+  const [ideaModalDetails, setIdeaModalDetails] = useState({
+    isOpen: false,
+    initialValues: null,
+  });
+
+  const { isOpen, initialValues } = ideaModalDetails;
+
+  const handleIdeModalDetails = (values?: any) => [
+    setIdeaModalDetails({ isOpen: true, initialValues: values }),
+  ];
+
+  const handleClose = () => {
+    setIdeaModalDetails({ isOpen: false, initialValues: null });
   };
+
   return (
     <div className="flex flex-col gap-4">
-      <h1>AllIdeas</h1>
-      <div className="flex justify-end">
-        <IdeaCreationForm />
-        <IdeaCreationForm initialValues={initialValues} />
+      <div className="flex justify-between border-b-2">
+        <h1 className="text-2xl font-bold pb-4">All Ideas</h1>
+        <Button onClick={() => handleIdeModalDetails()}>
+          {initialValues ? 'Update Idea' : 'Create Idea'}
+        </Button>
       </div>
-      <IdeasTable />
+      <IdeaCreationForm open={isOpen} initialValues={initialValues} onClose={handleClose} />
+      <IdeasTable handleIdeModalDetails={handleIdeModalDetails} />
     </div>
   );
 };

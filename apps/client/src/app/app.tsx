@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from '../components/layout';
+import { AllIdeas } from '../modules';
 import { Login, Signup } from '../modules/authentication';
-import { ProductRoadmap } from '../modules/product-roadmap';
 import { useAuthStore } from '../store';
 import { routes } from '../utils';
 
@@ -38,7 +38,7 @@ export function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<ProductRoadmap />} />
+          <Route index element={<AllIdeas />} />
           {routes.map((route) => {
             const { path, routeComponent: Element } = route;
             return <Route key={path} path={path} element={<Element />} />;

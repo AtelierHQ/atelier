@@ -2,10 +2,14 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { useFields, useIdea, useIdeas } from '../../../../api';
 import { DataTable } from '../../../../components/ui/data-table';
 import { cellMapper } from '../../../../utils';
-import { columns } from './components/columns';
+import { getColumns } from './components/columns';
 import type { Idea } from './types';
 
-function IdeasTable() {
+type Props = {
+  handleIdeModalDetails: (values?: any) => void[];
+};
+
+function IdeasTable({ handleIdeModalDetails }: Props) {
   const ideas = useIdeas();
   const { data: fields, isPending: isFieldsPending } = useFields();
   const { updateIdeaMutation } = useIdea();
@@ -40,7 +44,12 @@ function IdeasTable() {
 
   const ideasData = transformIdeas(ideas.data ?? []);
 
-  return <DataTable columns={[...columns, ...customColumns]} data={ideasData} />;
+  return (
+    <DataTable
+      columns={[...getColumns(handleIdeModalDetails), ...customColumns]}
+      data={ideasData}
+    />
+  );
 }
 
 function transformIdeas(ideas: Idea[]) {

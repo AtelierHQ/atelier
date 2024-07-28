@@ -9,6 +9,7 @@ type Idea = {
   isDeleted?: boolean;
   status?: string;
   statusFieldId?: string;
+  createdAt?: string;
 };
 
 export interface FieldsValue {
