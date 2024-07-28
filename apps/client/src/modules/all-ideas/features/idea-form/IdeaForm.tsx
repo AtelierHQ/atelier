@@ -44,7 +44,11 @@ function IdeaCreationForm({ initialValues, open, onClose }: IdeaCreationFormProp
       description: JSON.stringify(editor.children),
       author: userId,
     };
-    postIdea(valuesWithDescription);
+    postIdea(valuesWithDescription, {
+      onSuccess: () => {
+        onClose();
+      },
+    });
   };
   // const fields: FieldType[] = [
   //   {
