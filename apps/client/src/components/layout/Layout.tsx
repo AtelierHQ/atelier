@@ -10,11 +10,15 @@ const Layout = (props: Props) => {
   return (
     <div className="h-screen max-w-full flex ">
       <Sidebar />
-      <div className="flex-1 overflow-x-auto overflow-y-hidden">
+
+      <div className="flex-1  overflow-y-hidden">
         <Header />
-        <main className="flex-1 p-4">
-          <Outlet />
-        </main>
+
+        <div className="overflow-x-auto">
+          <main className="flex-1 p-4">
+            <Outlet />
+          </main>
+        </div>
       </div>
     </div>
   );
