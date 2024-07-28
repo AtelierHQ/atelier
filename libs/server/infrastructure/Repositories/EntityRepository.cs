@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Atelier.Core.Interfaces;
 using Atelier.Infrastructure.Extensions;
 using MongoDB.Driver;
@@ -29,10 +30,18 @@ public class EntityRepository<TEntity, TId> : IEntityRepository<TEntity, TId>
         return entity;
     }
 
-    public async Task<List<TEntity>> GetAllAsync(int page, int pageSize, CancellationToken ct)
+    public async Task<List<TEntity>> GetAllAsync(int page, int pageSize, Expression<Func<TEntity, bool>>? filter,
+        CancellationToken ct)
     {
         var skip = (page - 1) * pageSize;
-        return await _collection.Find(_ => true).Skip(skip).Limit(pageSize).ToListAsync(ct);
+        var query = filter != null ? _collection.Find(filter) : _collection.Find(_ => true);
+
+        if (page > 0 && pageSize > 0)
+        {
+            query = query.Skip(skip).Limit(pageSize);
+        }
+
+        return await query.ToListAsync(ct);
     }
 
     public async Task<TEntity> GetByIdAsync(TId id, CancellationToken ct)

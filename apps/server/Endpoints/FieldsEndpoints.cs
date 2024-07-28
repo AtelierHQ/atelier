@@ -57,7 +57,7 @@ public class GetAllFieldsEndpoints : EndpointWithoutRequest
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var fields = await _fieldsRepository.GetAllAsync(0, 0, ct);
+        var fields = await _fieldsRepository.GetAllAsync(0, 0, e => true, ct);
         var fieldsWithFieldTypeStrings = fields.Select(FieldsHelper.MapToResponseModel).ToList();
         await SendAsync(fieldsWithFieldTypeStrings, 200, ct);
     }

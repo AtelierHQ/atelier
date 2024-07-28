@@ -32,7 +32,7 @@ public class CreateIdeaEndpoint : Endpoint<CreateIdeaRequestModel, IdeaResponseM
     {
         var newIdea = new Idea(request.Title, request.Description, request.Author, request.Tags, request.Attachments);
 
-        var fields = await _fieldsRepository.GetAllAsync(0, 0, ct);
+        var fields = await _fieldsRepository.GetAllAsync(0, 0, e => true, ct);
 
         // Initialize all system fields values
         var fieldsValues = fields.Select(f => new FieldValue(f.Id, string.Empty)).ToList();
@@ -63,7 +63,7 @@ public class GetAllIdeasEndpoint : EndpointWithoutRequest<List<IdeaResponseModel
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var ideas = await _ideasRepository.GetAllAsync(0, 0, ct);
+        var ideas = await _ideasRepository.GetAllAsync(0, 0, e => !e.IsDeleted, ct);
         var response = ideas.ConvertAll(IdeaEndpointsHelper.MapToResponse);
 
         await SendAsync(response, cancellation: ct);

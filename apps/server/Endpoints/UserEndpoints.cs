@@ -30,8 +30,8 @@ public class UserSignupEndpoint : Endpoint<UserSignUpRequestModel>
 
     public override async Task HandleAsync(UserSignUpRequestModel req, CancellationToken ct)
     {
-        var users = await _usersRepository.GetAllAsync(0, 0, ct);
-        if (users.Any(u => u.Email == req.Email))
+        var users = await _usersRepository.GetAllAsync(0, 0, u => u.Email == req.Email, ct);
+        if (users.Any())
         {
             await SendAsync("Email already in use!", 400, ct);
         }
