@@ -20,7 +20,12 @@ const cellMapper = (
   const { fieldType: type, options = [] } = field;
   switch (type) {
     case 'checkbox':
-      return <Checkbox checked={Boolean(value)} onCheckedChange={(checked) => onChange(checked)} />;
+      return (
+        <Checkbox
+          checked={value === 'true'}
+          onCheckedChange={(checked) => onChange(checked?.toString())}
+        />
+      );
     case 'select': {
       return (
         <Select onValueChange={(value) => onChange(value)}>
@@ -38,7 +43,7 @@ const cellMapper = (
       );
     }
     case 'date': {
-      const date = typeof value === 'string' ? new Date(value) : undefined;
+      const date = value && typeof value === 'string' ? new Date(value) : undefined;
       return <DatePicker value={date} onChange={(date) => onChange(date)} />;
     }
     case 'input': {
@@ -50,9 +55,14 @@ const cellMapper = (
       );
     }
     case 'rating':
-      return <Rating rating={value as number} onRatingChange={(rating) => onChange(rating)} />;
+      return (
+        <Rating
+          rating={+value as number}
+          onRatingChange={(rating) => onChange(rating?.toString())}
+        />
+      );
     case 'slider':
-      return <Slider value={[+value]} onValueChange={(value) => onChange(value[0])} />;
+      return <Slider value={[+value]} onValueChange={(value) => onChange(value[0]?.toString())} />;
     case 'number':
       return (
         <Input

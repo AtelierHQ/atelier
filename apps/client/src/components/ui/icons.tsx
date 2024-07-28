@@ -1,31 +1,22 @@
 type IconProps = React.HTMLAttributes<SVGElement>
 
 export const Icons = {
+  LogoSmall: (props: IconProps) => (
+    <svg width="36" height="36" viewBox="0 0 159 109" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g mask="url(#mask0_7_38)">
+        <ellipse cx="144.5" cy="89.5" rx="14.5" ry="14.5" fill="#9999FF"/>
+        <path d="M94.0001 15.5C94.0001 7.49187 100.492 1 108.5 1V1C116.508 1 123 7.49187 123 15.5V89.5C123 97.5081 116.508 104 108.5 104V104C100.492 104 94.0001 97.5081 94.0001 89.5V15.5Z" fill="#9999FF"/>
+        <path d="M65.0711 1V1C77.1821 1 87 10.8179 87 22.9289V82.0711C87 94.1821 77.1821 104 65.0711 104V104L45.5876 102.314C-15.331 97.0417 -15.331 7.95834 45.5876 2.68619L65.0711 1Z" fill="#9999FF"/>
+      </g>
+    </svg>
+  ),
   Logo: (props: IconProps) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" {...props}>
-      <rect width="256" height="256" fill="none" />
-      <line
-        x1="208"
-        y1="128"
-        x2="128"
-        y2="208"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="16"
-      />
-      <line
-        x1="192"
-        y1="40"
-        x2="40"
-        y2="192"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="16"
-      />
+    <svg width="98" height="98" viewBox="0 0 159 109" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g mask="url(#mask0_7_38)">
+        <ellipse cx="144.5" cy="89.5" rx="14.5" ry="14.5" fill="#9999FF"/>
+        <path d="M94.0001 15.5C94.0001 7.49187 100.492 1 108.5 1V1C116.508 1 123 7.49187 123 15.5V89.5C123 97.5081 116.508 104 108.5 104V104C100.492 104 94.0001 97.5081 94.0001 89.5V15.5Z" fill="#9999FF"/>
+        <path d="M65.0711 1V1C77.1821 1 87 10.8179 87 22.9289V82.0711C87 94.1821 77.1821 104 65.0711 104V104L45.5876 102.314C-15.331 97.0417 -15.331 7.95834 45.5876 2.68619L65.0711 1Z" fill="#9999FF"/>
+      </g>
     </svg>
   ),
   Twitter: (props: IconProps) => (

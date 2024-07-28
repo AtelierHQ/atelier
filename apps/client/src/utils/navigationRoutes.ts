@@ -1,7 +1,8 @@
-import { Home, Package, ShoppingCart } from 'lucide-react';
+import { Home, LucidePresentation, Package, ShoppingCart } from 'lucide-react';
 import { AllIdeas } from '../modules';
 import ImpactAssessment from '../modules/impact-assessment';
 import { ProductRoadmap } from '../modules/product-roadmap';
+import { Whiteboard } from '../modules/whiteboard';
 
 const navigationItems = [
   {
@@ -19,6 +20,11 @@ const navigationItems = [
     link: 'product-roadmap',
     title: 'Product Roadmap',
   },
+  {
+    icon: LucidePresentation,
+    link: 'whiteboard',
+    title: 'Whiteboard',
+  },
 ];
 
 const routes = [
@@ -33,6 +39,10 @@ const routes = [
   {
     path: 'product-roadmap',
     routeComponent: ProductRoadmap,
+  },
+  {
+    path: 'whiteboard',
+    routeComponent: Whiteboard,
   },
 ];
 
