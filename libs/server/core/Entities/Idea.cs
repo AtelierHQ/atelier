@@ -1,3 +1,5 @@
+using Atelier.Core.Entities.Fields;
+using Atelier.Core.Enumerations;
 using Atelier.Core.Interfaces;
 
 namespace Atelier.Core.Entities;
@@ -15,6 +17,8 @@ public class Idea : IEntity<string>
     public List<string> Tags { get; private set; }
 
     public List<string> Attachments { get; private set; }
+
+    public List<FieldBase> Fields { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
 
@@ -36,6 +40,7 @@ public class Idea : IEntity<string>
         Author = author;
         Tags = tags;
         Attachments = attachments;
+        Fields = new List<FieldBase>();
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
         IsDeleted = false;
@@ -49,6 +54,12 @@ public class Idea : IEntity<string>
         {
             Id = id;
         }
+    }
+
+    public void InitializeFields(List<FieldBase> fields)
+    {
+        ArgumentNullException.ThrowIfNull(fields);
+        Fields = fields;
     }
 
     public void Update(string title, string description, List<string> tags, List<string> attachments)

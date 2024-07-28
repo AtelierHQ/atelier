@@ -1,5 +1,6 @@
 using Atelier.Core.Interfaces;
 using Atelier.Core.Services;
+using Atelier.Infrastructure.Converters;
 using Atelier.Infrastructure.Extensions;
 using Atelier.Infrastructure.Repositories;
 using Atelier.Server;
@@ -27,6 +28,7 @@ builder.Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.SwaggerDocument(o =>
 {
+    o.ShortSchemaNames = true;
     o.AutoTagPathSegmentIndex = 2;
     o.DocumentSettings = s =>
     {
@@ -43,8 +45,8 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseAuthentication()
-    .UseAuthentication()
-    .UseFastEndpoints();
+    .UseAuthorization()
+    .UseFastEndpoints(e => e.Serializer.Options.Converters.Add(new FieldConverter()));
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

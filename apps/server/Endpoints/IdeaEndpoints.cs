@@ -1,4 +1,7 @@
 using Atelier.Core.Entities;
+using Atelier.Core.Entities.Fields;
+using Atelier.Core.Enumerations;
+using Atelier.Core.Factories;
 using Atelier.Core.Interfaces;
 using Atelier.Server.RequestModels;
 using Atelier.Server.ResponseModels;
@@ -25,6 +28,12 @@ public class CreateIdeaEndpoint : Endpoint<CreateIdeaRequestModel, IdeaResponseM
     public override async Task HandleAsync(CreateIdeaRequestModel request, CancellationToken ct)
     {
         var newIdea = new Idea(request.Title, request.Description, request.Author, request.Tags, request.Attachments);
+
+        // Initialize all system fields
+        var systemFields = (from FieldType fieldType in Enum.GetValues(typeof(FieldType))
+            select SystemFieldFactory.CreateSystemField(fieldType)).ToList();
+
+        newIdea.InitializeFields(systemFields);
 
         var idea = await _ideasRepository.CreateAsync(newIdea, ct);
         var response = IdeaEndpointsHelper.MapToResponse(idea);
@@ -155,6 +164,7 @@ public static class IdeaEndpointsHelper
             Author = idea.Author,
             Tags = idea.Tags,
             Attachments = idea.Attachments,
+            Fields = idea.Fields,
             CreatedAt = idea.CreatedAt,
             UpdatedAt = idea.UpdatedAt,
             IsDeleted = idea.IsDeleted

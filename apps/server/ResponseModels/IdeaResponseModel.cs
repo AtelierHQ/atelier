@@ -1,3 +1,5 @@
+using Atelier.Core.Entities.Fields;
+
 namespace Atelier.Server.ResponseModels;
 
 public class IdeaResponseModel
@@ -13,6 +15,8 @@ public class IdeaResponseModel
     public List<string> Tags { get; init; } = [];
 
     public List<string> Attachments { get; init; } = [];
+
+    public List<FieldBase> Fields { get; init; } = [];
 
     public DateTime CreatedAt { get; init; } = DateTime.Now;
 
