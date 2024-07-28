@@ -26,18 +26,10 @@ export const columns: ColumnDef<Idea>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'author',
-    header: 'Author',
-  },
-  {
     accessorKey: 'title',
     header: 'Title',
     cell: ({ row }) => {
       return <span>{row.getValue('title')}</span>;
     },
-  },
-  {
-    accessorKey: 'description',
-    header: 'Description',
   },
 ];
