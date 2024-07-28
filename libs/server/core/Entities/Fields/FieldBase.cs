@@ -11,8 +11,6 @@ public abstract class FieldBase : IEntity<string>
 
     public string Description { get; private set; }
 
-    public string Value { get; private set; }
-
     public abstract FieldType FieldType { get; }
 
     protected FieldBase(string label, string description)
@@ -23,7 +21,6 @@ public abstract class FieldBase : IEntity<string>
         Id = string.Empty;
         Label = label;
         Description = description;
-        Value = string.Empty;
     }
 
     public void SetId(string id)
