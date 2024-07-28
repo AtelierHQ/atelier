@@ -15,7 +15,7 @@ async function createIdea(payload: Idea) {
     throw await res.json();
   }
   const data = await res.json();
-  return data as Idea[];
+  return data as Idea;
 }
 
 async function deleteIdea(id: string) {
@@ -34,6 +34,9 @@ async function updateIdea(payload: Partial<Idea>) {
   const res = await fetch(`${BASE_URL}/ideas/${id}`, {
     method: 'PUT',
     body: JSON.stringify(restPayload),
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
   if (!res.ok) {
     throw await res.json();
@@ -41,6 +44,13 @@ async function updateIdea(payload: Partial<Idea>) {
   const data = await res.json();
   return data as Idea[];
 }
+
+const createIdeaWithUpdate = async (payload: Idea) => {
+  const res = await createIdea(payload);
+  console.log('🚀 ~ createIdeaWithUpdate ~ res:', res);
+  const updateRes = await updateIdea({ ...payload, id: res.id });
+  return updateRes;
+};
 
 function useIdea() {
   const queryClient = useQueryClient();
@@ -50,6 +60,10 @@ function useIdea() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ideas'] });
     },
+  });
+
+  const createWithUpdateMutation = useMutation({
+    mutationFn: createIdeaWithUpdate,
   });
 
   const deleteIdeaMutation = useMutation({
@@ -84,6 +98,7 @@ function useIdea() {
   return {
     createIdeaMutation,
     deleteIdeaMutation,
+    createWithUpdateMutation,
     updateIdeaMutation: {
       ...updateIdeaMutation,
       mutate: debouncedUpdate,

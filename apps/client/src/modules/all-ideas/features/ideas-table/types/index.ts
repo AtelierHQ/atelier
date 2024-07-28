@@ -1,13 +1,19 @@
 type Idea = {
   id: string;
-  author: string;
   title: string;
   description: string;
-  roadmap: string;
+  author: string;
   tags: any[];
   attachments: any[];
-  [k: string]: any;
+  fieldsValues?: FieldsValue[];
+  isDeleted?: boolean;
+  status?: string;
 };
+
+export interface FieldsValue {
+  fieldId: string;
+  value: string;
+}
 
 type FieldType = 'select' | 'rating' | 'checkbox' | 'date' | 'input' | 'slider' | 'number';
 

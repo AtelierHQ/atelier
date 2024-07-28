@@ -10,7 +10,7 @@ import { useFields, useIdea, useIdeas } from '../../all-ideas/features/ideas-tab
 import { ColumnsType, Idea, NewIdea } from '../../all-ideas/features/ideas-table/types';
 
 const KanbanBoard = () => {
-  const { createIdeaMutation, updateIdeaMutation, deleteIdeaMutation } = useIdea();
+  const { createWithUpdateMutation, updateIdeaMutation, deleteIdeaMutation } = useIdea();
   const { data: ideas, isLoading, error } = useIdeas();
   const { data: allFields, isLoading: isFieldsLoading } = useFields();
   const [newIdeaTitle, setNewIdeaTitle] = useState<NewIdea>();
@@ -38,14 +38,16 @@ const KanbanBoard = () => {
     // Organize ideas into columns
     const newColumns = initialColumns;
     ideas?.forEach((idea) => {
-      const status = idea?.fieldsValues?.find(
-        (field: any) => field?.fieldId === statusField?.id,
-      )?.value;
-      if (newColumns[status]) {
-        newColumns[status].ideas.push(idea);
-      } else {
-        // If the status is not one of the columns, add it to the 'never' column
-        newColumns.never.ideas.push(idea);
+      if (!idea?.isDeleted) {
+        const status = idea?.fieldsValues?.find(
+          (field: any) => field?.fieldId === statusField?.id,
+        )?.value;
+        if (status && newColumns?.[status]) {
+          newColumns[status].ideas.push(idea);
+        } else {
+          // If the status is not one of the columns, add it to the 'never' column
+          newColumns.never.ideas.push(idea);
+        }
       }
     });
     setColumns(newColumns);
@@ -85,7 +87,7 @@ const KanbanBoard = () => {
       status: columnId,
     };
 
-    createIdeaMutation.mutate(newIdea as Idea, {
+    createWithUpdateMutation.mutate(newIdea as Idea, {
       onSuccess: () => {
         setNewIdeaTitle({ ...newIdeaTitle, [columnId]: '' });
       },
