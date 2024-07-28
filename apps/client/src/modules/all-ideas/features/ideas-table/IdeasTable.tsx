@@ -15,10 +15,15 @@ function IdeasTable() {
   }
 
   const handleCellChange = (ideaId: string, fieldId: string, newValue: any) => {
-    updateIdeaMutation.mutate({
-      id: ideaId,
-      [fieldId]: newValue,
+    const idea = ideas.data?.find((idea) => idea.id === ideaId);
+    const updatedFieldValues = idea?.fieldsValues?.map((field: any) => {
+      if (field?.fieldId === fieldId) {
+        return { ...field, value: newValue };
+      } else return field;
     });
+
+    const updatedIdea = { ...idea, fieldsValues: updatedFieldValues, author: null } as any;
+    updateIdeaMutation.mutate(updatedIdea);
   };
   const customColumns: ColumnDef<Idea>[] =
     fields?.map((field) => {

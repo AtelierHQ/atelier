@@ -1,6 +1,6 @@
 import { type YooptaContentValue, createYooptaEditor } from '@yoopta/editor';
 import { useMemo, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useIdea } from '../../../../api/useIdea';
 import Editor from '../../../../components/editor';
 import { Button } from '../../../../components/ui/button';
@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from '../../../../components/ui/dialog';
 import { Input } from '../../../../components/ui/input';
-import { cellMapper } from '../../../../utils/cellMapper';
+import { useAuthStore } from '../../../../store';
 import { WITH_BASIC_INIT_VALUE } from '../../../../utils/initValue';
 
 type FieldType = {
@@ -39,10 +39,16 @@ function IdeaCreationForm({ initialValues }: IdeaCreationFormProps) {
   const {
     createIdeaMutation: { mutate: postIdea },
   } = useIdea();
+  const { user } = useAuthStore();
+  const userId = user?.id;
 
   const onSubmit = () => {
     const values = getValues();
-    const valuesWithDescription = { ...values, description: JSON.stringify(editor.children) };
+    const valuesWithDescription = {
+      ...values,
+      description: JSON.stringify(editor.children),
+      author: userId,
+    };
     postIdea(valuesWithDescription);
   };
   // const fields: FieldType[] = [
