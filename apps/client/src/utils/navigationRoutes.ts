@@ -1,6 +1,5 @@
 import { Home, LogIn, Package, ShoppingCart } from 'lucide-react';
 import { AllIdeas } from '../modules';
-import { SignupPage } from '../modules/authentication';
 import ImpactAssessment from '../modules/impact-assessment';
 import { ProductRoadmap } from '../modules/product-roadmap';
 
@@ -40,10 +39,6 @@ const routes = [
     path: 'product-roadmap',
     routeComponent: ProductRoadmap,
   },
-  {
-    path: 'signup',
-    routeComponent: SignupPage,
-  }
 ];
 
 export { navigationItems, routes };

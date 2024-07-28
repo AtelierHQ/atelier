@@ -1,21 +1,57 @@
-import { Route, Routes } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from '../components/layout';
-import { SignupPage } from '../modules/authentication';
+import { Login, Signup } from '../modules/authentication';
 import { ProductRoadmap } from '../modules/product-roadmap';
+import { useAuthStore } from '../store';
 import { routes } from '../utils';
 
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated } = useAuthStore();
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
+
 export function App() {
+  const { isAuthenticated, checkAuth } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const initAuth = async () => {
+      await checkAuth(); // Implement this in your auth store
+      setIsLoading(false);
+    };
+    initAuth();
+  }, [checkAuth]);
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Or a proper loading component
+  }
+
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<ProductRoadmap />} />
-        {routes.map((route) => {
-          const { path, routeComponent: Element } = route;
-          return <Route key={path} path={path} element={<Element />} />;
-        })}
-        <Route path="*" element={<div>404</div>} />
-      </Route>
-      <Route path="/signup" element={<SignupPage />} />
+      {isAuthenticated ? (
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<ProductRoadmap />} />
+          {routes.map((route) => {
+            const { path, routeComponent: Element } = route;
+            return <Route key={path} path={path} element={<Element />} />;
+          })}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      ) : (
+        <>
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </>
+      )}
     </Routes>
   );
 }
