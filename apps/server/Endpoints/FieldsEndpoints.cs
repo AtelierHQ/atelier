@@ -60,7 +60,7 @@ public class GetAllFieldsEndpoints : EndpointWithoutRequest
         var fields = await _fieldsRepository.GetAllAsync(0, 0, ct);
 
         var fieldsResponse = fields.Select(FieldsHelper.MapToResponseModel).ToList();
-        await SendAsync(fields, 200, ct);
+        await SendAsync(fieldsResponse, 200, ct);
     }
 }
 
