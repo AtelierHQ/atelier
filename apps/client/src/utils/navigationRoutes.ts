@@ -1,8 +1,7 @@
 import { Home, Package, ShoppingCart } from 'lucide-react';
-import Editor from '../components/editor';
 import { AllIdeas } from '../modules';
 import ImpactAssessment from '../modules/impact-assessment';
-import ProductRoadmap from '../modules/product-roadmap';
+import { ProductRoadmap } from '../modules/product-roadmap';
 
 const navigationItems = [
   {
@@ -30,10 +29,6 @@ const routes = [
   {
     path: 'impact-assessment',
     routeComponent: ImpactAssessment,
-  },
-  {
-    path: 'product-roadmap',
-    routeComponent: Editor,
   },
   {
     path: 'product-roadmap',

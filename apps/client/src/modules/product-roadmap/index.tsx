@@ -1,5 +1,7 @@
+import { KanbanBoard } from './components';
+
 function ProductRoadmap() {
-  return <div>ProductRoadmap</div>;
+  return <KanbanBoard />;
 }
 
-export default ProductRoadmap;
+export { ProductRoadmap };
