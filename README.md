@@ -110,9 +110,6 @@ The Atelier project is a comprehensive application that includes both client and
 
 The project is organized into several key directories and files:
 
-Atelier/ ├── .config/ │ ├── dotnet-tools.json │ ├── .editorconfig │ ├── .eslintignore │ ├── .eslintrc.json │ ├── .gitignore │ ├── .idea/ │ │ ├── .idea.atelier/ │ │ │ ├── .idea/ │ ├── .nx/ │ │ ├── cache/ │ │ │ ├── 18.3.5-nx.darwin-arm64.node │ │ │ ├── cloud/ │ │ │ ├── nx_files.nxt │ │ │ ├── run.json │ │ │ ├── ... │ │ ├── workspace-data/ │ ├── .prettierignore │ ├── .prettierrc │ ├── .vscode/ │ │ ├── extensions.json │ │ ├── settings.json ├── apps/ │ ├── client/ │ │ ├── src/ │ │ │ ├── modules/ │ │ │ │ ├── all-ideas/ │ │ │ │ │ ├── features/ │ │ │ │ │ │ ├── idea-form/ │ │ │ │ │ │ │ ├── IdeaForm.tsx │ │ │ │ ├── whiteboard/ │ │ │ │ │ ├── types.ts │ │ │ │ │ ├── hooks/ │ │ │ │ │ │ ├── useCanvasConfig.tsx │ │ │ │ │ │ ├── useDrawShapes.tsx │ │ │ │ │ ├── index.tsx │ │ │ ├── components/ │ │ │ │ ├── ui/ │ │ │ │ │ ├── alert.tsx │ ├── server/ ├── atelier.sln ├── atelier.sln.DotSettings ├── Directory.Build.props ├── Directory.Build.targets ├── global.json ├── jest.config.ts ├── jest.preset.js ├── libs/ │ ├── server/ ├── nx.json ├── package.json ├── README.md ├── tsconfig.base.json
-
-
 ### Key Directories and Files
 
 - **.config/**: Contains configuration files for various tools and editors.
