@@ -52,7 +52,7 @@ public class UserSignupEndpoint : Endpoint<UserSignUpRequestModel>
     }
 }
 
-public class UserLoginEndpoint : Endpoint<UserLoginRequestModel>
+public class UserLoginEndpoint : Endpoint<UserLoginRequestModel, UserResponseModel>
 {
     private readonly IAuthenticationService _authenticationService;
 
@@ -83,7 +83,15 @@ public class UserLoginEndpoint : Endpoint<UserLoginRequestModel>
                     o.User["UserId"] = user.Id;
                 });
 
-            await SendAsync(new { req.Email, Token = jwtToken }, cancellation: ct);
+            var userResponse = new UserResponseModel
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Role = user.Role,
+                Token = jwtToken
+            };
+            await SendAsync(userResponse, cancellation: ct);
         }
         else
         {
