@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { Layout } from '../components/layout';
-import { AllIdeas } from '../modules';
+import { AllIdeas, Whiteboard } from '../modules';
 import { ProductRoadmap } from '../modules/product-roadmap';
 
 export function App() {
@@ -14,6 +14,7 @@ export function App() {
           })} */}
         <Route path="all-ideas" element={<AllIdeas />} />
         <Route path="product-roadmap" element={<ProductRoadmap />} />
+        <Route path="whiteboard" element={<Whiteboard />} />
         <Route path="*" element={<div>404</div>} />
       </Route>
     </Routes>
