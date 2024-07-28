@@ -1,22 +1,22 @@
 import { Route, Routes } from 'react-router-dom';
 import { Layout } from '../components/layout';
 import { AllIdeas } from '../modules';
-import { routes } from '../utils';
+import { ProductRoadmap } from '../modules/product-roadmap';
 
 export function App() {
   return (
-    <main>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<AllIdeas />} />
-          {routes.map((route) => {
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<ProductRoadmap />} />
+        {/* {routes.map((route) => {
             const { path, routeComponent: Element } = route;
             return <Route key={path} path={path} element={<Element />} />;
-          })}
-          <Route path="*" element={<div>404</div>} />
-        </Route>
-      </Routes>
-    </main>
+          })} */}
+        <Route path="all-ideas" element={<AllIdeas />} />
+        <Route path="product-roadmap" element={<ProductRoadmap />} />
+        <Route path="*" element={<div>404</div>} />
+      </Route>
+    </Routes>
   );
 }
 

@@ -3,6 +3,7 @@ type Idea = {
   author: string;
   title: string;
   description: string;
+  roadmap: string;
   tags: any[];
   attachments: any[];
   [k: string]: any;
@@ -22,4 +23,3 @@ type Field = {
 };
 
 export { Field, FieldType, Idea };
-
