@@ -27,4 +27,6 @@ type NewIdea = {
   [key: string]: string;
 };
 
-export { Field, FieldType, Idea, NewIdea };
+type ColumnsType = Record<string, { id: string; title: string; ideas: Idea[] }>;
+
+export { ColumnsType, Field, FieldType, Idea, NewIdea };
