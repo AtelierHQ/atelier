@@ -70,7 +70,7 @@ public class GetAllIdeasEndpoint : EndpointWithoutRequest<List<IdeaResponseModel
     }
 }
 
-public class GetIdeaEndpoint : Endpoint<string, IdeaResponseModel>
+public class GetIdeaEndpoint : EndpointWithoutRequest<IdeaResponseModel>
 {
     private readonly IEntityRepository<Idea, string> _ideasRepository;
 
@@ -86,8 +86,15 @@ public class GetIdeaEndpoint : Endpoint<string, IdeaResponseModel>
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(string id, CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken ct)
     {
+        var id = Route<string>("id");
+        if (string.IsNullOrEmpty(id))
+        {
+            await SendErrorsAsync(400, ct);
+            return;
+        }
+
         var idea = await _ideasRepository.GetByIdAsync(id, ct);
         var response = IdeaEndpointsHelper.MapToResponse(idea);
         await SendAsync(response, cancellation: ct);
@@ -130,7 +137,7 @@ public class UpdateIdeaEndpoint : Endpoint<UpdateIdeaRequestModel, IdeaResponseM
     }
 }
 
-public class DeleteIdeaEndpoint : Endpoint<string, bool>
+public class DeleteIdeaEndpoint : EndpointWithoutRequest<bool>
 {
     private readonly IEntityRepository<Idea, string> _ideasRepository;
 
@@ -146,8 +153,15 @@ public class DeleteIdeaEndpoint : Endpoint<string, bool>
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(string id, CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken ct)
     {
+        var id = Route<string>("id");
+        if (string.IsNullOrEmpty(id))
+        {
+            await SendErrorsAsync(400, ct);
+            return;
+        }
+
         var idea = await _ideasRepository.GetByIdAsync(id, ct);
 
         idea.MarkAsDeleted();
