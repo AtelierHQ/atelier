@@ -22,7 +22,7 @@ public class UpdateIdeaValidator : Validator<UpdateIdeaRequestModel>
     public UpdateIdeaValidator()
     {
         RuleFor(x => x.Title).NotEmpty().MaximumLength(100);
-        RuleFor(x => x.Description).NotEmpty().MaximumLength(1000);
+        RuleFor(x => x.Description).NotEmpty();
         RuleFor(x => x.Tags).NotNull();
         RuleFor(x => x.Attachments).NotNull();
         RuleFor(x => x.FieldsValues).NotNull();

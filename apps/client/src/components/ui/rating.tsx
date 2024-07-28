@@ -41,7 +41,7 @@ const Rating = ({ rating, maxRating = 5, showValue = false, onRatingChange }: Pr
               key={index}
               className={cn(
                 'w-4 h-4 rounded-full cursor-pointer transition-all duration-200 ease-in-out',
-                dot.filled ? 'bg-blue-500' : 'bg-gray-300',
+                dot.filled ? 'bg-link-active' : 'bg-gray-300',
                 dot.hovered && 'transform scale-110',
               )}
               onMouseEnter={() => handleMouseEnter(index)}

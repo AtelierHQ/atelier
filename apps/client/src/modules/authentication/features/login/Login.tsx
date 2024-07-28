@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { z } from 'zod';
 import { Alert } from '../../../../components/ui/alert';
 import { Button } from '../../../../components/ui/button';
+import { Icons } from '../../../../components/ui/icons';
 import { Input } from '../../../../components/ui/input';
 import { Label } from '../../../../components/ui/label';
 import { useAuthStore } from '../../../../store';
@@ -50,10 +51,13 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
+    <div className="flex items-center justify-center min-h-screen bg-stone-100">
+      <div className="w-full max-w-md p-10 rounded-lg">
+      <div className="absolute top-4 left-12">
+        <Icons.Logo className="w-16 h-16 mr-10" />
+      </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <h1 className="text-2xl font-bold text-center">Log in to Atelier</h1>
+          <h1 className="text-4xl text-center">Login</h1>
 
           {error && <Alert variant="destructive">{error}</Alert>}
 
