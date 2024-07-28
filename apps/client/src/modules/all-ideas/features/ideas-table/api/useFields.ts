@@ -7,6 +7,9 @@ async function fetchFields() {
     throw await res.json();
   }
   const data = await res.json();
+  if (typeof data === 'string') {
+    return JSON.parse(data) as Field[];
+  }
   return data as Field[];
 }
 
