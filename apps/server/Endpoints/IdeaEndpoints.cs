@@ -1,7 +1,5 @@
 using Atelier.Core.Entities;
 using Atelier.Core.Entities.Fields;
-using Atelier.Core.Enumerations;
-using Atelier.Core.Factories;
 using Atelier.Core.Interfaces;
 using Atelier.Server.RequestModels;
 using Atelier.Server.ResponseModels;
@@ -11,11 +9,16 @@ namespace Atelier.Server.Endpoints;
 
 public class CreateIdeaEndpoint : Endpoint<CreateIdeaRequestModel, IdeaResponseModel>
 {
+    private readonly IEntityRepository<FieldBase, string> _fieldsRepository;
     private readonly IEntityRepository<Idea, string> _ideasRepository;
 
-    public CreateIdeaEndpoint(IEntityRepository<Idea, string> ideasRepository)
+    public CreateIdeaEndpoint(IEntityRepository<FieldBase, string> fieldsRepository,
+        IEntityRepository<Idea, string> ideasRepository)
     {
+        ArgumentNullException.ThrowIfNull(fieldsRepository);
         ArgumentNullException.ThrowIfNull(ideasRepository);
+
+        _fieldsRepository = fieldsRepository;
         _ideasRepository = ideasRepository;
     }
 
@@ -29,11 +32,11 @@ public class CreateIdeaEndpoint : Endpoint<CreateIdeaRequestModel, IdeaResponseM
     {
         var newIdea = new Idea(request.Title, request.Description, request.Author, request.Tags, request.Attachments);
 
-        // Initialize all system fields
-        var systemFields = (from FieldType fieldType in Enum.GetValues(typeof(FieldType))
-            select SystemFieldFactory.CreateSystemField(fieldType)).ToList();
+        var fields = await _fieldsRepository.GetAllAsync(0, 0, ct);
 
-        newIdea.InitializeFields(systemFields);
+        // Initialize all system fields values
+        var fieldsValues = fields.Select(f => new FieldValue(f.Id, string.Empty)).ToList();
+        newIdea.InitializeFieldValues(fieldsValues);
 
         var idea = await _ideasRepository.CreateAsync(newIdea, ct);
         var response = IdeaEndpointsHelper.MapToResponse(idea);
@@ -164,7 +167,7 @@ public static class IdeaEndpointsHelper
             Author = idea.Author,
             Tags = idea.Tags,
             Attachments = idea.Attachments,
-            Fields = idea.Fields,
+            FieldsValues = idea.FieldValues,
             CreatedAt = idea.CreatedAt,
             UpdatedAt = idea.UpdatedAt,
             IsDeleted = idea.IsDeleted

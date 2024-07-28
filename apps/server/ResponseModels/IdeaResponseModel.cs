@@ -16,7 +16,7 @@ public class IdeaResponseModel
 
     public List<string> Attachments { get; init; } = [];
 
-    public List<FieldBase> Fields { get; init; } = [];
+    public List<FieldValue> FieldsValues { get; init; } = [];
 
     public DateTime CreatedAt { get; init; } = DateTime.Now;
 

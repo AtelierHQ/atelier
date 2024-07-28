@@ -1,8 +1,9 @@
 using Atelier.Core.Enumerations;
+using Atelier.Core.Interfaces;
 
 namespace Atelier.Core.Entities.Fields;
 
-public abstract class FieldBase
+public abstract class FieldBase : IEntity<string>
 {
     public string Id { get; private set; }
 
@@ -23,5 +24,15 @@ public abstract class FieldBase
         Label = label;
         Description = description;
         Value = string.Empty;
+    }
+
+    public void SetId(string id)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
+        if (string.IsNullOrEmpty(Id))
+        {
+            Id = id;
+        }
     }
 }
