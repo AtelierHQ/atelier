@@ -1,6 +1,6 @@
 namespace Atelier.Server.ResponseModels;
 
-public abstract class FieldsBaseResponseModel
+public abstract class FieldBaseResponseModel
 {
     public string Id { get; init; } = string.Empty;
 
@@ -11,34 +11,34 @@ public abstract class FieldsBaseResponseModel
     public string FieldType { get; init; } = string.Empty;
 }
 
-public class SelectFieldResponseModel : FieldsBaseResponseModel
+public class SelectFieldResponseModel : FieldBaseResponseModel
 {
     public List<string> Options { get; init; } = [];
 }
 
-public class RatingFieldResponseModel : FieldsBaseResponseModel
+public class RatingFieldResponseModel : FieldBaseResponseModel
 {
     public int MaxRating { get; init; }
 }
 
-public class CheckboxFieldResponseModel : FieldsBaseResponseModel
+public class CheckboxFieldResponseModel : FieldBaseResponseModel
 {
     public bool IsChecked { get; init; }
 }
 
-public class DateFieldResponseModel : FieldsBaseResponseModel
+public class DateFieldResponseModel : FieldBaseResponseModel
 {
     public DateTime? MinDate { get; init; }
 
     public DateTime? MaxDate { get; init; }
 }
 
-public class InputFieldResponseModel : FieldsBaseResponseModel
+public class InputFieldResponseModel : FieldBaseResponseModel
 {
     public string Placeholder { get; init; } = string.Empty;
 }
 
-public class SliderFieldResponseModel : FieldsBaseResponseModel
+public class SliderFieldResponseModel : FieldBaseResponseModel
 {
     public double MinValue { get; init; }
 
@@ -47,7 +47,7 @@ public class SliderFieldResponseModel : FieldsBaseResponseModel
     public double Step { get; init; }
 }
 
-public class NumberFieldResponseModel : FieldsBaseResponseModel
+public class NumberFieldResponseModel : FieldBaseResponseModel
 {
     public bool IsDecimal { get; init; }
 

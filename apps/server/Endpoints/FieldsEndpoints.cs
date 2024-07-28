@@ -59,13 +59,13 @@ public class GetAllFieldsEndpoints : EndpointWithoutRequest
     {
         var fields = await _fieldsRepository.GetAllAsync(0, 0, ct);
         var fieldsWithFieldTypeStrings = fields.Select(FieldsHelper.MapToResponseModel).ToList();
-        await SendAsync(JsonConvert.SerializeObject(fieldsWithFieldTypeStrings), 200, ct);
+        await SendAsync(fieldsWithFieldTypeStrings, 200, ct);
     }
 }
 
 public static class FieldsHelper
 {
-    public static FieldsBaseResponseModel MapToResponseModel(FieldBase field)
+    public static FieldBaseResponseModel MapToResponseModel(FieldBase field)
     {
         return field switch
         {

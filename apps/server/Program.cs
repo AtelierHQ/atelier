@@ -4,6 +4,7 @@ using Atelier.Infrastructure.Converters;
 using Atelier.Infrastructure.Extensions;
 using Atelier.Infrastructure.Repositories;
 using Atelier.Server;
+using Atelier.Server.Converter;
 using FastEndpoints;
 using FastEndpoints.Security;
 using FastEndpoints.Swagger;
@@ -48,7 +49,11 @@ var app = builder.Build();
 
 app.UseAuthentication()
     .UseAuthorization()
-    .UseFastEndpoints(e => e.Serializer.Options.Converters.Add(new FieldConverter()));
+    .UseFastEndpoints(e =>
+    {
+        e.Serializer.Options.Converters.Add(new FieldConverter());
+        e.Serializer.Options.Converters.Add(new FieldBaseResponseModelConverter());
+    });
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
