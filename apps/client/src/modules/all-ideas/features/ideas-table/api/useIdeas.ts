@@ -1,10 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { BASE_URL } from '../config';
-
-type Idea = {
-  id: string;
-};
-
+import { BASE_URL } from '../../../../../config';
+import { Idea } from '../types';
 async function fetchIdeas() {
   const res = await fetch(`${BASE_URL}/ideas`);
   if (!res.ok) {
@@ -16,10 +12,9 @@ async function fetchIdeas() {
 
 function useIdeas() {
   return useQuery({
-    queryKey: ['ideas'],
+    queryKey: ['ideas',],
     queryFn: fetchIdeas,
   });
 }
 
-export { Idea, useIdeas };
-
+export { useIdeas };
