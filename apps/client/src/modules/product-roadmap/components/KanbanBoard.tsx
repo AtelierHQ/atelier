@@ -1,5 +1,5 @@
 import { PlusCircle, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components//ui/card';
 import { Input } from '../../../components//ui/input';
@@ -13,7 +13,6 @@ const KanbanBoard = () => {
   const { createIdeaMutation, updateIdeaMutation, deleteIdeaMutation } = useIdea();
   const { data: ideas, isLoading, error } = useIdeas();
   const { data: allFields } = useFields();
-  const statusField = allFields?.find((field) => field.label === 'Status');
   const [newIdeaTitle, setNewIdeaTitle] = useState<NewIdea>();
   const loggedUser = 'John Doe';
 
@@ -31,18 +30,22 @@ const KanbanBoard = () => {
     never: { id: 'never', title: 'Never', ideas: [] },
   };
 
-  // Organize ideas into columns
-  ideas?.forEach((idea) => {
-    const status = idea?.fieldsValues?.find(
-      (field: any) => field?.fieldId === statusField?.id,
-    )?.value;
-    if (columns[status]) {
-      columns[status].ideas.push(idea);
-    } else {
-      // If the status is not one of the columns, add it to the 'never' column
-      columns.never.ideas.push(idea);
-    }
-  });
+  useEffect(() => {
+    if (!allFields) return;
+    const statusField = allFields?.find((field) => field.label === 'Status');
+    // Organize ideas into columns
+    ideas?.forEach((idea) => {
+      const status = idea?.fieldsValues?.find(
+        (field: any) => field?.fieldId === statusField?.id,
+      )?.value;
+      if (columns[status]) {
+        columns[status].ideas.push(idea);
+      } else {
+        // If the status is not one of the columns, add it to the 'never' column
+        columns.never.ideas.push(idea);
+      }
+    });
+  }, [allFields]);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
