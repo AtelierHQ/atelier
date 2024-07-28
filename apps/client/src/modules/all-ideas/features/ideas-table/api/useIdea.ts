@@ -4,9 +4,23 @@ import { debounce } from '../../../../../utils';
 import { Idea } from '../types';
 
 async function createIdea(payload: Idea) {
-  const res = await fetch(`${BASE_URL}/idea`, {
+  const res = await fetch(`${BASE_URL}/ideas`, {
     method: 'POST',
     body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) {
+    throw await res.json();
+  }
+  const data = await res.json();
+  return data as Idea[];
+}
+
+async function deleteIdea(id: string) {
+  const res = await fetch(`${BASE_URL}/ideas/${id}`, {
+    method: 'DELETE',
   });
   if (!res.ok) {
     throw await res.json();
@@ -17,7 +31,7 @@ async function createIdea(payload: Idea) {
 
 async function updateIdea(payload: Partial<Idea>) {
   const { id, ...restPayload } = payload;
-  const res = await fetch(`${BASE_URL}/idea/${id}`, {
+  const res = await fetch(`${BASE_URL}/ideas/${id}`, {
     method: 'PUT',
     body: JSON.stringify(restPayload),
   });
@@ -32,6 +46,8 @@ function useIdea() {
   const queryClient = useQueryClient();
 
   const createIdeaMutation = useMutation({ mutationFn: createIdea });
+
+  const deleteIdeaMutation = useMutation({ mutationFn: deleteIdea });
 
   const updateIdeaMutation = useMutation({
     mutationFn: updateIdea,
@@ -57,6 +73,7 @@ function useIdea() {
 
   return {
     createIdeaMutation,
+    deleteIdeaMutation,
     updateIdeaMutation: {
       ...updateIdeaMutation,
       mutate: debouncedUpdate,
