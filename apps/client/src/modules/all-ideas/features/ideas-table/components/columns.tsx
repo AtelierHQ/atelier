@@ -40,20 +40,4 @@ export const columns: ColumnDef<Idea>[] = [
     accessorKey: 'description',
     header: 'Description',
   },
-  {
-    accessorKey: 'tags',
-    header: 'Tags',
-    cell: ({ row }) => {
-      const allTags = (row.getValue('tags') as any[]).filter((tag) => tag != null);
-      return allTags.length > 0 ? (
-        <div className="flex gap-2">
-          {allTags.map((tag, index) => (
-            <span className="bg-blue-200 text-blue-900 py-1 px-2 rounded-sm">{tag}</span>
-          ))}
-        </div>
-      ) : (
-        '-'
-      );
-    },
-  },
 ];

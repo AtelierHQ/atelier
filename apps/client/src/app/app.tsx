@@ -13,6 +13,7 @@ export function App() {
             const { path, routeComponent: Element } = route;
             return <Route key={path} path={path} element={<Element />} />;
           })}
+          <Route path="*" element={<div>404</div>} />
         </Route>
       </Routes>
     </main>

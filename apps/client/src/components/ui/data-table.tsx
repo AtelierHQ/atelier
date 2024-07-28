@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,16 +11,17 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { ChevronDown } from 'lucide-react';
+import * as React from 'react';
 
-import { Input } from './input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
+import { Button } from './button';
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
   DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
 } from './dropdown-menu';
-import { Button } from './button';
+import { Input } from './input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

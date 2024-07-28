@@ -12,7 +12,6 @@ type FieldType = 'select' | 'rating' | 'checkbox' | 'date' | 'input' | 'slider' 
 
 type Field = {
   id: string;
-  value: string | number;
   description: string;
   name: string;
   custom: boolean;
@@ -22,4 +21,5 @@ type Field = {
   } | null;
 };
 
-export { Field, Idea };
+export { Field, FieldType, Idea };
+

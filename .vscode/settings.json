@@ -3,5 +3,8 @@
     "editor.codeActionsOnSave": {
         "source.organizeImports": "explicit",
         "source.fixAll": "explicit"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
 }
