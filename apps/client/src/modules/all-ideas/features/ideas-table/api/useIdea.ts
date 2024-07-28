@@ -45,10 +45,15 @@ async function updateIdea(payload: Partial<Idea>) {
   return data as Idea[];
 }
 
-const createIdeaWithUpdate = async (payload: Idea) => {
+const createIdeaWithUpdate = async (payload: any) => {
   const res = await createIdea(payload);
-  console.log('🚀 ~ createIdeaWithUpdate ~ res:', res);
-  const updateRes = await updateIdea({ ...payload, id: res.id });
+  const newPayload = { ...payload, id: res.id, fieldsValues: res?.fieldsValues };
+  newPayload.fieldsValues = newPayload?.fieldsValues?.map((field: any) => {
+    if (field?.fieldId === payload?.statusFieldId) {
+      return { ...field, value: payload?.status };
+    } else return field;
+  });
+  const updateRes = await updateIdea(newPayload);
   return updateRes;
 };
 
@@ -64,6 +69,9 @@ function useIdea() {
 
   const createWithUpdateMutation = useMutation({
     mutationFn: createIdeaWithUpdate,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['ideas'] });
+    },
   });
 
   const deleteIdeaMutation = useMutation({

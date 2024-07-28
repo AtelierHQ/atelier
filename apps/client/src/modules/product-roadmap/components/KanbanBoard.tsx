@@ -15,6 +15,7 @@ const KanbanBoard = () => {
   const { data: allFields, isLoading: isFieldsLoading } = useFields();
   const [newIdeaTitle, setNewIdeaTitle] = useState<NewIdea>();
   const loggedUser = 'John Doe';
+  const statusField = allFields?.find((field) => field.label === 'Roadmap');
 
   const colors: { [key: string]: { bg: string; text: string } } = {
     now: { bg: 'bg-green', text: 'text-black' },
@@ -33,8 +34,6 @@ const KanbanBoard = () => {
   const [columns, setColumns] = useState<ColumnsType>(initialColumns);
 
   useEffect(() => {
-    if (!allFields) return;
-    const statusField = allFields?.find((field) => field.label === 'Status');
     // Organize ideas into columns
     const newColumns = initialColumns;
     ideas?.forEach((idea) => {
@@ -51,7 +50,7 @@ const KanbanBoard = () => {
       }
     });
     setColumns(newColumns);
-  }, [allFields?.length, ideas?.length]);
+  }, [allFields, ideas, allFields?.length, ideas?.length]);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -71,7 +70,12 @@ const KanbanBoard = () => {
     } else {
       destColumn.ideas.splice(destination.index, 0, movedIdea);
       // Update the status of the idea
-      updateIdeaMutation.mutate({ id: movedIdea.id, status: destination.droppableId });
+      const fieldValues = movedIdea?.fieldsValues?.map((field: any) => {
+        if (field?.fieldId === statusField?.id) {
+          return { ...field, value: destColumn.id };
+        } else return field;
+      });
+      updateIdeaMutation.mutate({ ...movedIdea, fieldsValues: fieldValues });
     }
   };
 
@@ -85,6 +89,7 @@ const KanbanBoard = () => {
       tags: [],
       attachments: [],
       status: columnId,
+      statusFieldId: statusField?.id,
     };
 
     createWithUpdateMutation.mutate(newIdea as Idea, {
@@ -106,8 +111,8 @@ const KanbanBoard = () => {
   return (
     <div className="p-4">
       <div
-        className="bg-green-100 bg-red-50 bg-red-100 bg-yellow-100 bg-blue-50 bg-blue-100"
-        style={{ display: 'none' }}
+        className="bg-green-100 bg-green-50 bg-red-50 bg-red-100 bg-yellow-100 bg-yellow-50 bg-blue-50 bg-blue-100"
+        style={{ visibility: 'hidden', width: '0', height: '0' }}
       />
       <h1 className="text-2xl font-bold mb-4">Product Roadmap</h1>
       <DragDropContext onDragEnd={onDragEnd}>

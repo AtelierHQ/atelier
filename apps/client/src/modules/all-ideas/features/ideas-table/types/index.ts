@@ -8,6 +8,7 @@ type Idea = {
   fieldsValues?: FieldsValue[];
   isDeleted?: boolean;
   status?: string;
+  statusFieldId?: string;
 };
 
 export interface FieldsValue {
