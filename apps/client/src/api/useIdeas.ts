@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { BASE_URL } from '../../../../../config';
-import { Idea } from '../types';
+import { BASE_URL } from '../config';
+import type { Idea } from '../modules/all-ideas/features/ideas-table/types';
 async function fetchIdeas() {
   const res = await fetch(`${BASE_URL}/ideas`);
   if (!res.ok) {

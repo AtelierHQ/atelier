@@ -8,6 +8,7 @@ type Idea = {
   fieldsValues?: FieldsValue[];
   isDeleted?: boolean;
   status?: string;
+  statusFieldId?: string;
 };
 
 export interface FieldsValue {
@@ -18,15 +19,19 @@ export interface FieldsValue {
 type FieldType = 'select' | 'rating' | 'checkbox' | 'date' | 'input' | 'slider' | 'number';
 
 type Field = {
+  options?: string[];
   id: string;
-  description: string;
-  name: string;
   label: string;
-  custom: boolean;
-  type: FieldType;
-  configurations: {
-    options: string[];
-  } | null;
+  description: string;
+  fieldType: FieldType;
+  maxRating?: number;
+  minDate?: string;
+  maxDate: string;
+  isChecked?: boolean;
+  minValue?: number;
+  maxValue?: number;
+  step?: number;
+  placeholder?: string;
 };
 
 type NewIdea = {
@@ -35,4 +40,4 @@ type NewIdea = {
 
 type ColumnsType = Record<string, { id: string; title: string; ideas: Idea[] }>;
 
-export { ColumnsType, Field, FieldType, Idea, NewIdea };
+export type { ColumnsType, Field, FieldType, Idea, NewIdea };

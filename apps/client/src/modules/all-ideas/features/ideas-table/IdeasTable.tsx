@@ -1,8 +1,9 @@
-import { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef } from '@tanstack/react-table';
+import { useFields, useIdea, useIdeas } from '../../../../api';
 import { DataTable } from '../../../../components/ui/data-table';
 import { cellMapper } from '../../../../utils';
-import { useFields, useIdea, useIdeas } from './api';
-import { Idea } from './types';
+import { columns } from './components/columns';
+import type { Idea } from './types';
 
 function IdeasTable() {
   const ideas = useIdeas();
@@ -23,7 +24,7 @@ function IdeasTable() {
     fields?.map((field) => {
       return {
         accessorKey: field.id,
-        header: field.name,
+        header: field.label,
         cell: ({ row }) => {
           return cellMapper(field, row.getValue(field.id), (newValue) =>
             handleCellChange(row.original.id, field.id, newValue),
@@ -32,7 +33,26 @@ function IdeasTable() {
       };
     }) ?? [];
 
-  return <DataTable columns={[...customColumns]} data={ideas.data ?? []} />;
+  const ideasData = transformIdeas(ideas.data ?? []);
+
+  return <DataTable columns={[...columns, ...customColumns]} data={ideasData} />;
+}
+
+function transformIdeas(ideas: Idea[]) {
+  return ideas.map((idea) => {
+    const transformedIdea: any = {
+      id: idea.id,
+      title: idea.title,
+      description: idea.description,
+      author: idea.author,
+    };
+
+    idea.fieldsValues?.forEach((field: { fieldId: string; value: any }) => {
+      transformedIdea[field.fieldId] = field.value;
+    });
+
+    return transformedIdea;
+  });
 }
 
 export { IdeasTable };
