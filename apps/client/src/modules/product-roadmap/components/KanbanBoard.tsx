@@ -176,7 +176,10 @@ const KanbanBoard = () => {
                     <Input
                       value={newIdeaTitle?.[column.id]}
                       onChange={(e) => {
-                        setNewIdeaTitle({ ...newIdeaTitle, [column.id]: e.target.value });
+                        setNewIdeaTitle({
+                          ...newIdeaTitle,
+                          [column.id]: e.target.value,
+                        });
                       }}
                       placeholder="New idea title"
                       className="flex-grow"
