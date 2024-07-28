@@ -1,23 +1,24 @@
 using Atelier.Core.Entities.Fields;
-using Atelier.Core.Enumerations;
 
 namespace Atelier.Core.Factories;
 
 public static class SystemFieldFactory
 {
-    public static FieldBase CreateSystemField(FieldType fieldType, string label, string description)
+    public static IReadOnlyList<FieldBase> CreateSystemFields()
     {
-        return fieldType switch
+        var systemFields = new List<FieldBase>
         {
-            FieldType.Select => new SelectField("Category", "The category of the idea",
-                ["Technology", "Process Improvement", "Product", "Marketing"]),
-            FieldType.Rating => new RatingField("Priority", "The priority of the idea", 5),
-            FieldType.Checkbox => new CheckboxField("Is Completed", "Whether the idea is completed", false),
-            FieldType.Date => new DateField("Due Date", "The due date for this idea", DateTime.Today.ToUniversalTime()),
-            FieldType.Input => new InputField("Title", "The title of the idea", "Enter idea title"),
-            FieldType.Slider => new SliderField("Progress", "The progress of the idea", 0, 100, 5),
-            FieldType.Number => new NumberField("Estimated Cost", "The estimated cost of the idea", false, false),
-            _ => throw new ArgumentException($"Unknown system field type: {fieldType}")
+            new SelectField("Roadmap", "The roadmap of the idea", ["Now", "Next", "Later", "Won't Do"]),
+            new RatingField("Priority", "The priority of the idea", 3),
+            new DateField("Start Date", "The start date for this idea", DateTime.Today.ToUniversalTime()),
+            new DateField("Due Date", "The due date for this idea", DateTime.Today.AddDays(1).ToUniversalTime()),
+            new RatingField("Effort", "The effort required for the idea", 5),
+            new RatingField("Impact", "The impact of the idea", 5),
+            new CheckboxField("Completed", "Whether the idea is completed", false),
+            new SliderField("Progress", "The progress of the idea", 0, 100, 5),
+            new InputField("Tags", "The tags for the idea", "tag 1, tag 2, tag 3")
         };
+
+        return systemFields;
     }
 }

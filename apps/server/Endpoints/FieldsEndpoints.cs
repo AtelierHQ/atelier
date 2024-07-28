@@ -27,8 +27,7 @@ public class InitializeSystemFieldsEndpoints : EndpointWithoutRequest
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var systemFields = (from FieldType fieldType in Enum.GetValues(typeof(FieldType))
-            select SystemFieldFactory.CreateSystemField(fieldType)).ToList();
+        var systemFields = SystemFieldFactory.CreateSystemFields();
 
         foreach (var field in systemFields)
         {
