@@ -1,56 +1,49 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuthStore } from 'apps/client/src/store';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import { z } from 'zod';
 import { Alert } from '../../../../components/ui/alert';
 import { Button } from '../../../../components/ui/button';
 import { Input } from '../../../../components/ui/input';
 import { Label } from '../../../../components/ui/label';
-import { useAuthenication } from '../login/hooks';
+import { useAuthStore } from '../../../../store';
+import { useAuthenication } from './hooks';
 
 const schema = z.object({
-  name: z.string().min(3, 'Name must be at least 3 characters'),
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
-type SignupFormData = z.infer<typeof schema>;
+type LoginFormData = z.infer<typeof schema>;
 
-const Signup = () => {
+const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { signupMutation, loginMutation } = useAuthenication();
+  const { loginMutation } = useAuthenication();
   const { setUser } = useAuthStore();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignupFormData>({
+  } = useForm<LoginFormData>({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async (data: SignupFormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     setError(null);
     try {
-      signupMutation.mutate(
-        { ...data, role: 'user' },
-        {
-          onSuccess: () => {
-            loginMutation.mutate(
-              { password: data.password, email: data.email },
-              {
-                onSuccess: (data) => {
-                  setUser(data);
-                },
-              },
-            );
-          },
+      loginMutation.mutate(data, {
+        onSuccess: (data) => {
+          setUser(data);
         },
-      );
+      });
+      // if()
+      //   await new Promise((resolve) => setTimeout(resolve, 1000));
     } catch (err) {
-      setError('Signup failed. Please check your information and try again.');
+      setError('Login failed. Please check your credentials and try again.');
     } finally {
       setIsLoading(false);
     }
@@ -60,15 +53,9 @@ const Signup = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <h1 className="text-2xl font-bold text-center">Sign up to Atelier</h1>
+          <h1 className="text-2xl font-bold text-center">Log in to Atelier</h1>
 
           {error && <Alert variant="destructive">{error}</Alert>}
-
-          <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <Input id="name" type="text" {...register('name')} />
-            {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
-          </div>
 
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -83,12 +70,17 @@ const Signup = () => {
           </div>
 
           <Button type="submit" disabled={isLoading} className="w-full">
-            {isLoading ? 'Signing up...' : 'Sign Up'}
+            {isLoading ? 'Logging in...' : 'Log In'}
           </Button>
 
           <div className="text-center">
-            <a href="/login" className="text-blue-500 hover:underline">
-              Already have an account? Log in
+            Create an account
+            <Link to="/signup" className="text-blue-500 hover:underline ml-1">
+              Sign up
+            </Link>
+            <span className="m-1">|</span>
+            <a href="/forgot-password" className="text-blue-500 hover:underline">
+              Forgot password?
             </a>
           </div>
         </form>
@@ -97,4 +89,4 @@ const Signup = () => {
   );
 };
 
-export { Signup };
+export { Login };
