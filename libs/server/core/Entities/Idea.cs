@@ -61,17 +61,20 @@ public class Idea : IEntity<string>
         FieldValues = fieldsValues;
     }
 
-    public void Update(string title, string description, List<string> tags, List<string> attachments)
+    public void Update(string title, string description)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(title);
         ArgumentException.ThrowIfNullOrWhiteSpace(description);
-        ArgumentNullException.ThrowIfNull(tags);
-        ArgumentNullException.ThrowIfNull(attachments);
 
         Title = title;
         Description = description;
-        Tags = tags;
-        Attachments = attachments;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void UpdateFieldValues(List<FieldValue> fieldsValues)
+    {
+        ArgumentNullException.ThrowIfNull(fieldsValues);
+        FieldValues = fieldsValues;
         UpdatedAt = DateTime.UtcNow;
     }
 

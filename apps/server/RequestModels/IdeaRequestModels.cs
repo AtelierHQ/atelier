@@ -1,3 +1,5 @@
+using Atelier.Core.Entities.Fields;
+
 namespace Atelier.Server.RequestModels;
 
 public class CreateIdeaRequestModel
@@ -24,4 +26,6 @@ public class UpdateIdeaRequestModel
     public List<string> Tags { get; init; } = [];
 
     public List<string> Attachments { get; init; } = [];
+
+    public List<FieldValue> FieldsValues { get; init; } = [];
 }

@@ -128,7 +128,8 @@ public class UpdateIdeaEndpoint : Endpoint<UpdateIdeaRequestModel, IdeaResponseM
 
         var idea = await _ideasRepository.GetByIdAsync(id, ct);
 
-        idea.Update(request.Title, request.Description, request.Tags, request.Attachments);
+        idea.Update(request.Title, request.Description);
+        idea.UpdateFieldValues(request.FieldsValues);
 
         var updatedIdea = await _ideasRepository.UpdateAsync(id, idea, ct);
         var response = IdeaEndpointsHelper.MapToResponse(updatedIdea);
