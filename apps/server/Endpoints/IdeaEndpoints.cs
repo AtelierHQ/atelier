@@ -151,6 +151,8 @@ public class DeleteIdeaEndpoint : Endpoint<string, bool>
         var idea = await _ideasRepository.GetByIdAsync(id, ct);
 
         idea.MarkAsDeleted();
+
+        await _ideasRepository.UpdateAsync(id, idea, ct);
         await SendAsync(true, 204, cancellation: ct);
     }
 }
