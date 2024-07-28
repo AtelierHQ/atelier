@@ -1,6 +1,6 @@
 import { PlusCircle, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { DragDropContext, Draggable, type DropResult, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable, type DropResult } from 'react-beautiful-dnd';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components//ui/card';
 import { Input } from '../../../components//ui/input';
 import { Button } from '../../../components/ui/button';
@@ -31,12 +31,13 @@ const KanbanBoard = () => {
     never: { id: 'never', title: 'Never', ideas: [] },
   };
 
-  const [columns, setColumns] = useState<ColumnsType>(initialColumns);
+  const [columns, setColumns] = useState<ColumnsType | undefined>();
 
   useEffect(() => {
+    if (!ideas || !allFields) return;
     // Organize ideas into columns
     const newColumns = initialColumns;
-    for (const idea of ideas || []) {
+    for (const idea of ideas) {
       if (!idea?.isDeleted) {
         const status = idea?.fieldsValues?.find(
           (field) => field?.fieldId === statusField?.id,
@@ -50,7 +51,7 @@ const KanbanBoard = () => {
       }
     }
     setColumns(newColumns);
-  }, [allFields, ideas]);
+  }, [allFields, ideas, statusField]);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -60,6 +61,8 @@ const KanbanBoard = () => {
     if (source.droppableId === destination.droppableId && source.index === destination.index) {
       return;
     }
+
+    if (!columns) return;
 
     const sourceColumn = columns[source.droppableId];
     const destColumn = columns[destination.droppableId];
@@ -113,11 +116,11 @@ const KanbanBoard = () => {
       <div
         className="bg-green-100 bg-green-50 bg-red-50 bg-red-100 bg-yellow-100 bg-yellow-50 bg-blue-50 bg-blue-100"
         style={{ visibility: 'hidden', width: '0', height: '0' }}
-      />
+      ></div>
       <h1 className="text-2xl font-bold mb-4">Product Roadmap</h1>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex gap-4 overflow-x-auto">
-          {Object.values(columns).map((column) => (
+          {Object.values(columns || [])?.map((column) => (
             <div key={column.id} className="w-[25vw] min-w-[400px] max-w-[500px]">
               <Card className={`${colors[column.id]?.bg}-50`}>
                 <CardHeader>

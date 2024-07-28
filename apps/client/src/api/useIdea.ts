@@ -34,6 +34,9 @@ async function updateIdea(payload: Partial<Idea>) {
   const res = await fetch(`${BASE_URL}/ideas/${id}`, {
     method: 'PUT',
     body: JSON.stringify(restPayload),
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
   if (!res.ok) {
     throw await res.json();
