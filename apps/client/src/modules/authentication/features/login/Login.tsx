@@ -53,7 +53,7 @@ const Login = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-stone-100">
       <div className="w-full max-w-md p-10 rounded-lg">
-      <div className="absolute top-4 left-4">
+      <div className="absolute top-12 left-12">
         <Icons.Logo className="w-16 h-16 mr-10" />
       </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
