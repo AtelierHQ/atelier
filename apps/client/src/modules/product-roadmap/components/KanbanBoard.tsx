@@ -1,13 +1,13 @@
 import { PlusCircle, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable, type DropResult } from 'react-beautiful-dnd';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components//ui/card';
 import { Input } from '../../../components//ui/input';
 import { Button } from '../../../components/ui/button';
 
 // Assuming Idea type is defined in your types file
-import { useFields, useIdea, useIdeas } from '../../all-ideas/features/ideas-table/api';
-import { ColumnsType, Idea, NewIdea } from '../../all-ideas/features/ideas-table/types';
+import { useFields, useIdea, useIdeas } from '../../../api';
+import type { ColumnsType, Idea, NewIdea } from '../../all-ideas/features/ideas-table/types';
 
 const KanbanBoard = () => {
   const { createWithUpdateMutation, updateIdeaMutation, deleteIdeaMutation } = useIdea();
@@ -37,10 +37,10 @@ const KanbanBoard = () => {
     const statusField = allFields?.find((field) => field.label === 'Status');
     // Organize ideas into columns
     const newColumns = initialColumns;
-    ideas?.forEach((idea) => {
+    for (const idea of ideas || []) {
       if (!idea?.isDeleted) {
         const status = idea?.fieldsValues?.find(
-          (field: any) => field?.fieldId === statusField?.id,
+          (field) => field?.fieldId === statusField?.id,
         )?.value;
         if (status && newColumns?.[status]) {
           newColumns[status].ideas.push(idea);
@@ -49,9 +49,9 @@ const KanbanBoard = () => {
           newColumns.never.ideas.push(idea);
         }
       }
-    });
+    }
     setColumns(newColumns);
-  }, [allFields?.length, ideas?.length]);
+  }, [allFields, ideas]);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
