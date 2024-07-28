@@ -64,7 +64,6 @@ const KanbanBoard = () => {
     const sourceColumn = columns[source.droppableId];
     const destColumn = columns[destination.droppableId];
     const [movedIdea] = sourceColumn.ideas.splice(source.index, 1);
-    console.log('🚀 ~ onDragEnd ~ movedIdea:', movedIdea);
 
     if (source.droppableId === destination.droppableId) {
       sourceColumn.ideas.splice(destination.index, 0, movedIdea);
