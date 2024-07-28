@@ -1,20 +1,21 @@
 import { PlusCircle, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components//ui/card';
 import { Input } from '../../../components//ui/input';
 import { Button } from '../../../components/ui/button';
 
 // Assuming Idea type is defined in your types file
-import { useFields, useIdea, useIdeas } from '../../all-ideas/features/ideas-table/api';
-import { ColumnsType, Idea, NewIdea } from '../../all-ideas/features/ideas-table/types';
+import { useFields, useIdea, useIdeas } from '../../../api';
+import type { ColumnsType, Idea, NewIdea } from '../../all-ideas/features/ideas-table/types';
 
 const KanbanBoard = () => {
-  const { createIdeaMutation, updateIdeaMutation, deleteIdeaMutation } = useIdea();
+  const { createWithUpdateMutation, updateIdeaMutation, deleteIdeaMutation } = useIdea();
   const { data: ideas, isLoading, error } = useIdeas();
   const { data: allFields, isLoading: isFieldsLoading } = useFields();
   const [newIdeaTitle, setNewIdeaTitle] = useState<NewIdea>();
   const loggedUser = 'John Doe';
+  const statusField = allFields?.find((field) => field.label === 'Roadmap');
 
   const colors: { [key: string]: { bg: string; text: string } } = {
     now: { bg: 'bg-green', text: 'text-black' },
@@ -33,23 +34,23 @@ const KanbanBoard = () => {
   const [columns, setColumns] = useState<ColumnsType>(initialColumns);
 
   useEffect(() => {
-    if (!allFields) return;
-    const statusField = allFields?.find((field) => field.label === 'Status');
     // Organize ideas into columns
     const newColumns = initialColumns;
-    ideas?.forEach((idea) => {
-      const status = idea?.fieldsValues?.find(
-        (field: any) => field?.fieldId === statusField?.id,
-      )?.value;
-      if (newColumns[status]) {
-        newColumns[status].ideas.push(idea);
-      } else {
-        // If the status is not one of the columns, add it to the 'never' column
-        newColumns.never.ideas.push(idea);
+    for (const idea of ideas || []) {
+      if (!idea?.isDeleted) {
+        const status = idea?.fieldsValues?.find(
+          (field) => field?.fieldId === statusField?.id,
+        )?.value;
+        if (status && newColumns?.[status]) {
+          newColumns[status].ideas.push(idea);
+        } else {
+          // If the status is not one of the columns, add it to the 'never' column
+          newColumns.never.ideas.push(idea);
+        }
       }
-    });
+    }
     setColumns(newColumns);
-  }, [allFields?.length, ideas?.length]);
+  }, [allFields, ideas]);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -69,7 +70,12 @@ const KanbanBoard = () => {
     } else {
       destColumn.ideas.splice(destination.index, 0, movedIdea);
       // Update the status of the idea
-      updateIdeaMutation.mutate({ id: movedIdea.id, status: destination.droppableId });
+      const fieldValues = movedIdea?.fieldsValues?.map((field: any) => {
+        if (field?.fieldId === statusField?.id) {
+          return { ...field, value: destColumn.id };
+        } else return field;
+      });
+      updateIdeaMutation.mutate({ ...movedIdea, fieldsValues: fieldValues });
     }
   };
 
@@ -83,9 +89,10 @@ const KanbanBoard = () => {
       tags: [],
       attachments: [],
       status: columnId,
+      statusFieldId: statusField?.id,
     };
 
-    createIdeaMutation.mutate(newIdea as Idea, {
+    createWithUpdateMutation.mutate(newIdea as Idea, {
       onSuccess: () => {
         setNewIdeaTitle({ ...newIdeaTitle, [columnId]: '' });
       },
@@ -104,8 +111,8 @@ const KanbanBoard = () => {
   return (
     <div className="p-4">
       <div
-        className="bg-green-100 bg-red-50 bg-red-100 bg-yellow-100 bg-blue-50 bg-blue-100"
-        style={{ display: 'none' }}
+        className="bg-green-100 bg-green-50 bg-red-50 bg-red-100 bg-yellow-100 bg-yellow-50 bg-blue-50 bg-blue-100"
+        style={{ visibility: 'hidden', width: '0', height: '0' }}
       />
       <h1 className="text-2xl font-bold mb-4">Product Roadmap</h1>
       <DragDropContext onDragEnd={onDragEnd}>

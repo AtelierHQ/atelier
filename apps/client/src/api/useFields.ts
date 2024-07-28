@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { BASE_URL } from '../../../../../config';
-import { Field } from '../types';
+import { BASE_URL } from '../config';
+import type { Field } from '../modules/all-ideas/features/ideas-table/types';
+
 async function fetchFields() {
   const res = await fetch(`${BASE_URL}/fields`);
   if (!res.ok) {

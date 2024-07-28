@@ -10,26 +10,25 @@ import {
   SelectValue,
 } from '../components/ui/select';
 import { Slider } from '../components/ui/slider';
-import { Field } from '../modules/all-ideas/features/ideas-table/types';
+import type { Field } from '../modules/all-ideas/features/ideas-table/types';
 
 const cellMapper = (
   field: Field,
   value: string | number | boolean,
   onChange: (newValue: any) => void,
 ) => {
-  const { type, configurations } = field;
+  const { fieldType: type, options = [] } = field;
   switch (type) {
     case 'checkbox':
       return <Checkbox checked={Boolean(value)} onCheckedChange={(checked) => onChange(checked)} />;
     case 'select': {
-      const options = configurations?.options ?? [];
       return (
         <Select onValueChange={(value) => onChange(value)}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder={value ?? 'Value'} />
           </SelectTrigger>
           <SelectContent>
-            {options.map((option) => (
+            {options?.map((option: any) => (
               <SelectItem key={option} value={option}>
                 {option}
               </SelectItem>
@@ -63,7 +62,7 @@ const cellMapper = (
         />
       );
     default:
-      return value;
+      return <></>;
   }
 };
 

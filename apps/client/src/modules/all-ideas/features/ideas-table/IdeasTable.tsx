@@ -1,8 +1,8 @@
-import { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '../../../../components/ui/data-table';
 import { cellMapper } from '../../../../utils';
-import { useFields, useIdea, useIdeas } from './api';
-import { Idea } from './types';
+import { useFields, useIdea, useIdeas } from '../../../../api';
+import type { Idea } from './types';
 
 function IdeasTable() {
   const ideas = useIdeas();
@@ -23,7 +23,7 @@ function IdeasTable() {
     fields?.map((field) => {
       return {
         accessorKey: field.id,
-        header: field.name,
+        header: field.label,
         cell: ({ row }) => {
           return cellMapper(field, row.getValue(field.id), (newValue) =>
             handleCellChange(row.original.id, field.id, newValue),
