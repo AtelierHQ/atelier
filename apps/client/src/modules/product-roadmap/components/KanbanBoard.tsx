@@ -6,25 +6,41 @@ import { Input } from '../../../components//ui/input';
 import { Button } from '../../../components/ui/button';
 
 // Assuming Idea type is defined in your types file
-import { useIdea, useIdeas } from '../../all-ideas/features/ideas-table/api';
-import { Idea } from '../../all-ideas/features/ideas-table/types';
+import { useFields, useIdea, useIdeas } from '../../all-ideas/features/ideas-table/api';
+import { Idea, NewIdea } from '../../all-ideas/features/ideas-table/types';
 
 const KanbanBoard = () => {
-  const { createIdeaMutation, updateIdeaMutation } = useIdea();
+  const { createIdeaMutation, updateIdeaMutation, deleteIdeaMutation } = useIdea();
   const { data: ideas, isLoading, error } = useIdeas();
-  const [newIdeaTitle, setNewIdeaTitle] = useState<string>('');
+  const { data: allFields } = useFields();
+  const statusField = allFields?.find((field) => field.label === 'Status');
+  const [newIdeaTitle, setNewIdeaTitle] = useState<NewIdea>();
+  const loggedUser = 'John Doe';
+
+  const colors: { [key: string]: { bg: string; text: string } } = {
+    now: { bg: 'bg-green', text: 'text-black' },
+    next: { bg: 'bg-yellow', text: 'text-black' },
+    later: { bg: 'bg-blue', text: 'text-blue-500' },
+    never: { bg: 'bg-red', text: 'text-red-500' },
+  };
 
   const columns: Record<string, { id: string; title: string; ideas: Idea[] }> = {
-    todo: { id: 'todo', title: 'To Do', ideas: [] },
-    inprogress: { id: 'inprogress', title: 'In Progress', ideas: [] },
-    done: { id: 'done', title: 'Done', ideas: [] },
+    now: { id: 'now', title: 'Now', ideas: [] },
+    next: { id: 'next', title: 'Next', ideas: [] },
+    later: { id: 'later', title: 'Later', ideas: [] },
+    never: { id: 'never', title: 'Never', ideas: [] },
   };
-  console.log({ ideas });
 
   // Organize ideas into columns
   ideas?.forEach((idea) => {
-    if (columns[idea.roadmap]) {
-      columns[idea.roadmap].ideas.push(idea);
+    const status = idea?.fieldsValues?.find(
+      (field: any) => field?.fieldId === statusField?.id,
+    )?.value;
+    if (columns[status]) {
+      columns[status].ideas.push(idea);
+    } else {
+      // If the status is not one of the columns, add it to the 'never' column
+      columns.never.ideas.push(idea);
     }
   });
 
@@ -51,23 +67,26 @@ const KanbanBoard = () => {
   };
 
   const addIdea = (columnId: string) => {
-    if (!newIdeaTitle.trim()) return;
+    if (!newIdeaTitle?.[columnId].trim()) return;
 
     const newIdea: Omit<Idea, 'id'> = {
-      title: newIdeaTitle,
-      description: '',
+      title: newIdeaTitle?.[columnId],
+      description: 'sample description',
+      author: loggedUser,
+      tags: [],
+      attachments: [],
       status: columnId,
     };
 
     createIdeaMutation.mutate(newIdea as Idea, {
       onSuccess: () => {
-        setNewIdeaTitle('');
+        setNewIdeaTitle({ ...newIdeaTitle, [columnId]: '' });
       },
     });
   };
 
   const deleteIdea = (ideaId: string) => {
-    // Implement delete mutation here
+    deleteIdeaMutation.mutate(ideaId);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -77,20 +96,24 @@ const KanbanBoard = () => {
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Product Roadmap</h1>
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex flex-wrap gap-4">
+        <div className="flex gap-4 overflow-x-auto">
           {Object.values(columns).map((column) => (
-            <div key={column.id} className="w-full sm:w-1/2 lg:w-1/3">
-              <Card>
+            <div key={column.id} className="w-[25vw] min-w-[400px] max-w-[500px]">
+              <Card className={`${colors[column.id]?.bg}-50`}>
                 <CardHeader>
-                  <CardTitle>{column.title}</CardTitle>
+                  <CardTitle
+                    className={`${colors[column.id]?.bg}-100 w-fit p-[5px] rounded text-xs ${colors[column.id]?.text} `}
+                  >
+                    {column.title}
+                  </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex-col flex h-[calc(100vh-200px)]">
                   <Droppable droppableId={column.id}>
                     {(provided) => (
                       <div
                         {...provided.droppableProps}
                         ref={provided.innerRef}
-                        className="min-h-[200px]"
+                        className="min-h-[calc(100vh-300px)] overflow-y-auto flex flex-col gap-2"
                       >
                         {column.ideas.map((idea, index) => (
                           <Draggable key={`${idea.id}-card`} draggableId={idea.id} index={index}>
@@ -111,7 +134,7 @@ const KanbanBoard = () => {
                                       size="icon"
                                       onClick={() => deleteIdea(idea.id)}
                                     >
-                                      <X className="h-4 w-4" />
+                                      <X className="h-4 w-4 text-red-600" />
                                     </Button>
                                   </CardHeader>
                                   <CardContent>
@@ -130,8 +153,10 @@ const KanbanBoard = () => {
                   </Droppable>
                   <div className="mt-4 flex space-x-2">
                     <Input
-                      value={newIdeaTitle}
-                      onChange={(e) => setNewIdeaTitle(e.target.value)}
+                      value={newIdeaTitle?.[column.id]}
+                      onChange={(e) => {
+                        setNewIdeaTitle({ ...newIdeaTitle, [column.id]: e.target.value });
+                      }}
                       placeholder="New idea title"
                       className="flex-grow"
                     />
