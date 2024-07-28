@@ -55,13 +55,16 @@ const AllIdeas = (props: Props) => {
       },
     },
   };
+
   return (
     <div className="flex flex-col gap-4">
-      <h1>AllIdeas</h1>
+      <h1>All Ideas</h1>
+
       <div className="flex justify-end">
         <IdeaCreationForm />
         <IdeaCreationForm initialValues={initialValues} />
       </div>
+
       <IdeasTable />
     </div>
   );
