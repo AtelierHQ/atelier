@@ -17,7 +17,7 @@ const Toolbar: FC<Props> = ({ activeShape, setToDraw }) => {
     <div className="flex w-fit mx-auto rounded-md border-2 border-zinc-120 border-solid shadow-sm p-2 my-5  items-center gap-2">
       <button
         className={`rounded-md p-1.5 ${
-          activeShape === ShapesEnum.Rectangle ? 'bg-blue-500' : 'hover:bg-blue-300'
+          activeShape === ShapesEnum.Rectangle ? 'bg-link-active' : 'hover:bg-link-active hover:text-white'
         }`}
         onClick={() => setShapeToDraw(ShapesEnum.Rectangle)}
       >
@@ -26,7 +26,7 @@ const Toolbar: FC<Props> = ({ activeShape, setToDraw }) => {
 
       <button
         className={`rounded-md p-1.5 ${
-          activeShape === ShapesEnum.Line ? 'bg-blue-500' : 'hover:bg-blue-300'
+          activeShape === ShapesEnum.Line ? 'bg-link-active' : 'hover:bg-link-active hover:text-white'
         }`}
         onClick={() => setShapeToDraw(ShapesEnum.Line)}
       >
@@ -36,7 +36,7 @@ const Toolbar: FC<Props> = ({ activeShape, setToDraw }) => {
       <button
         onClick={() => setShapeToDraw(ShapesEnum.Text)}
         className={`rounded-md p-1.5 ${
-          activeShape === ShapesEnum.Text ? 'bg-blue-500' : 'hover:bg-blue-300'
+          activeShape === ShapesEnum.Text ? 'bg-link-active' : 'hover:bg-link-active hover:text-white'
         }`}
       >
         <TypeIcon className={` ${activeShape === ShapesEnum.Text && 'text-white'}`} />
@@ -45,7 +45,7 @@ const Toolbar: FC<Props> = ({ activeShape, setToDraw }) => {
       <button
         onClick={() => setShapeToDraw(ShapesEnum.Pen)}
         className={`rounded-md p-1.5 ${
-          activeShape === ShapesEnum.Pen ? 'bg-blue-500' : 'hover:bg-blue-300'
+          activeShape === ShapesEnum.Pen ? 'bg-link-active' : 'hover:bg-link-active hover:text-white'
         }`}
       >
         <PencilIcon className={` ${activeShape === ShapesEnum.Pen && 'text-white'}`} />

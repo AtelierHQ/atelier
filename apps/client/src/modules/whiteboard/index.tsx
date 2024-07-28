@@ -105,12 +105,12 @@ export const Whiteboard = () => {
       <section className=" absolute right-4 bottom-6 flex gap-4 p-2 rounded-md z-20">
         <Button
           onClick={() => undo(shapesMap, canvasConfig)}
-          className="bg-blue-600 hover:bg-blue-500"
+          className="bg-link-active hover:bg-link-active"
         >
           <Undo2Icon />
         </Button>
 
-        <Button onClick={() => redo()} className="bg-blue-600 hover:bg-blue-500">
+        <Button onClick={() => redo()} className="bg-link-active hover:bg-link-active">
           <Redo2Icon />
         </Button>
       </section>
